@@ -5,7 +5,7 @@ function f_vibrate(value) {
     }
 }
 
-
+**************************************************************************************************************************************
 function f_set_busy(value) {
     oApp.setBusy(value);
     if (window.datawedge) {
@@ -16,7 +16,7 @@ function f_set_busy(value) {
         }
     }
 }
-
+**************************************************************************************************************************************
 
 // search and display the erro msg
 function showMessage(id, msgid, msgnb, w1, w2, w3, w4, w5, MStrip) {
@@ -85,7 +85,7 @@ function showMessage(id, msgid, msgnb, w1, w2, w3, w4, w5, MStrip) {
 
 }
 
-
+**************************************************************************************************************************************
 function setscreen(id) {
     var Field = [
         SimpleFormRawMaterial,
