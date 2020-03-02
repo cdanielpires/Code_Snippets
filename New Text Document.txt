@@ -1,0 +1,240 @@
+    gv_count = count;
+    modelNotificationList.setData([]);
+    modelNotificationListMatL.setData([]);
+    // no value entered
+    if (InputInvRef.getValue() === "" && InputInvDocFrom.getValue() === "") {
+        showMessage(MessageArea, "HR99S00_DAQ_VIEW", "001", "", "", "", "", "");
+        InputInvRef.setValueState("Error");
+        InputInvDocFrom.setValueState("Error");
+        f_set_busy(false);
+        ButtonFirst.setEnabled(true);
+        ButtonSecond.setEnabled(true);
+        return;
+    } else {
+        InputInvRef.setValueState("None");
+        InputInvDocFrom.setValueState("None");
+    }
+
+    var key_field = [],
+        value_fields = [],
+        operator = [];
+
+    var key_field2 = [],
+        value_fields2 = [],
+        operator2 = [];
+
+    // if the reference is filld
+    if (InputInvRef.getValue() !== "") {
+
+        key_field.push("XBLNI");
+        value_fields.push(InputInvRef.getValue());
+        operator.push("EQ");
+
+    }
+
+
+    if (count === "second") {
+        key_field2 = JSON.parse(JSON.stringify(key_field));
+        value_fields2 = JSON.parse(JSON.stringify(value_fields));
+        operator2 = JSON.parse(JSON.stringify(operator));
+
+
+        // 1º cound done
+        key_field.push("XZAEL");
+        value_fields.push("X");
+        operator.push("EQ");
+
+        // not posted yet
+        key_field.push("XDIFF");
+        value_fields.push("");
+        operator.push("EQ");
+        //control
+        key_field2.push("XZAEL");
+        value_fields2.push("");
+        operator2.push("EQ");
+
+    } else {
+        // // 1º count not done
+        // key_field.push("XZAEL");
+        // value_fields.push("");
+        // operator.push("EQ");
+
+        // not posted yet
+        key_field.push("XDIFF");
+        value_fields.push("");
+        operator.push("EQ");
+
+    }
+    // recount document
+    key_field.push("XNZAE");
+    value_fields.push("");
+    operator.push("EQ");
+
+    key_field2.push("XNZAE");
+    value_fields2.push("");
+    operator2.push("EQ");
+
+    if (InputInvDocFrom.getValue() !== "") {
+
+
+        key_field.push("IBLNR");
+
+        if (InputInvDocTo.getValue() !== "") {
+            var Range = [];
+
+            Range.push(f_zeroFill(InputInvDocFrom.getValue(), 10));
+            Range.push(f_zeroFill(InputInvDocTo.getValue(), 10));
+
+            value_fields.push(Range);
+
+            operator.push("BT");
+
+        } else {
+
+            value_fields.push(f_zeroFill(InputInvDocFrom.getValue(), 10));
+            operator.push("EQ");
+
+        }
+
+    }
+
+    var data = ModelData.Find(TableISEG, key_field, value_fields, operator);
+    // add the bin to the list
+    f_clearScreen();
+    if (data.length === 0) {
+        if (count === "second") {
+            var data = ModelData.Find(TableISEG, key_field2, value_fields2, operator2);
+            if (data.length === 0) {
+                showMessage(MessageArea, "PK", "376", "", "", "", "", "");
+                f_set_busy(false);
+                ButtonFirst.setEnabled(true);
+                ButtonSecond.setEnabled(true);
+                return;
+            } else {
+                showMessage(MessageArea, "ZZC_UI_WM_MSG", "016", "", "", "", "", "");
+                f_set_busy(false);
+                ButtonFirst.setEnabled(true);
+                ButtonSecond.setEnabled(true);
+                return;
+            };
+        } else {
+            showMessage(MessageArea, "PK", "376", "", "", "", "", "");
+            f_set_busy(false);
+            ButtonFirst.setEnabled(true);
+            ButtonSecond.setEnabled(true);
+            return;
+        }
+    }
+
+    var NotificationListMatL_1 = [];
+    var lgpbe = [];
+    var NotificationList_1 = [];
+    for (var i = 0; i < data.length; i++) {
+        data[i].STATUS = "Error";
+        data[i].COUNT_M = 0;
+        data[i].TOTAL_M = 1;
+        if ((data[i].XZAEL === "X" && count === "first") || (data[i].XNZAE === "X" && count === "second")) {
+            data[i].COUNT_M = 1;
+            data[i].STATUS = "Success";
+        }
+
+        var unsaved = ModelData.FindFirst(TableToBeSaved, ["IBLNR", "GJAHR", "ZEILI"], [data[i].IBLNR, data[i].GJAHR, data[i].ZEILI], ["EQ", "EQ", "EQ"]);
+        if (unsaved.IBLNR !== undefined) {
+
+            data[i] = JSON.parse(JSON.stringify(unsaved));
+            if (unsaved.XZAEL !== 'X') {
+                data[i].COUNT_M = 1;
+            }
+            data[i].TOTAL_M = 1;
+            // data[i].STATUS = "Success";
+            data[i].STATUS = "Warning";
+        }
+
+
+
+        // ModelData.Add(NotificationListMatL, JSON.parse(JSON.stringify(data[i])));
+        NotificationListMatL_1.push(JSON.parse(JSON.stringify(data[i])));
+
+        if (i === 0) {
+            lgpbe.push(data[i].LGPBE);
+            NotificationList_1.push(data[i]);
+            // ModelData.Add(NotificationList, data[i]);
+
+        } else {
+            var Index = lgpbe.indexOf(data[i].LGPBE);
+            // var check_bin = ModelData.FindFirst(NotificationList, "LGPBE", data[i].LGPBE, "EQ");
+
+            // if (check_bin.IBLNR === undefined) {
+            if (Index === -1) {
+                lgpbe.push(data[i].LGPBE);
+                NotificationList_1.push(data[i]);
+                //  ModelData.Add(NotificationList, data[i]);
+            } else {
+                var check_bin = NotificationList_1[Index];
+                check_bin.COUNT_M = +check_bin.COUNT_M + data[i].COUNT_M;
+                check_bin.TOTAL_M = +check_bin.TOTAL_M + 1;
+
+                if (check_bin.COUNT_M === 0) {
+                    check_bin.STATUS = "Error";
+                } else if (check_bin.COUNT_M === check_bin.TOTAL_M && unsaved.IBLNR === undefined) {
+                    check_bin.STATUS = "Success";
+                } else {
+                    check_bin.STATUS = "Warning";
+                }
+                // ModelData.Update(NotificationList, "LGPBE", data[i].LGPBE, check_bin, "EQ");
+                NotificationList_1[Index] = check_bin;
+
+            }
+            check_bin = undefined;
+        }
+        unsaved = undefined;
+    }
+
+    // find the line of the new materials.
+
+    var New_mat = ModelData.Find(TableToBeSaved, "IBLNR", "", "EQ");
+
+    if (New_mat.length > 0) {
+
+        for (var i = 0; i < New_mat.length; i++) {
+            var Index = lgpbe.indexOf(New_mat[i].LGPBE);
+            if (Index !== -1) {
+
+                var check_bin = NotificationList_1[Index];
+                check_bin.COUNT_M = +check_bin.COUNT_M + 1;
+                // check_bin.TOTAL_M = +check_bin.TOTAL_M + 1;
+
+                if (check_bin.COUNT_M === 0) {
+                    check_bin.STATUS = "Error";
+                } else if (check_bin.COUNT_M === check_bin.TOTAL_M && unsaved.IBLNR === undefined) {
+                    check_bin.STATUS = "Success";
+                } else {
+                    check_bin.STATUS = "Warning";
+                }
+                // ModelData.Update(NotificationList, "LGPBE", data[i].LGPBE, check_bin, "EQ");
+                NotificationList_1[Index] = check_bin;
+
+            }
+        }
+        // append the lines
+        NotificationListMatL_1.push.apply(NotificationListMatL_1, New_mat);
+    }
+
+
+    modelNotificationListMatL.setData(NotificationListMatL_1);
+    modelNotificationListMatL.refresh();
+
+    modelNotificationList.setData(NotificationList_1);
+    modelNotificationList.refresh();
+
+    f_set_busy(false);
+    ButtonFirst.setEnabled(true);
+    ButtonSecond.setEnabled(true);
+
+    if (NotificationList_1.length === 1) {
+        // only one bin go automaticly for the material list page
+        f_MaterialInBin(NotificationList_1[0].LGPBE);
+    } else {
+        //  show the bin page
+        oApp.to(oPageBins);
+    }
