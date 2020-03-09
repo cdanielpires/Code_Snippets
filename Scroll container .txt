@@ -1,0 +1,3 @@
+    // var a =  oPageMaterialList.$().height() - headerSelection3.$().height() - SearchFieldMat.$().height() - footerSelection3.$().height() ;
+    var a = footerSelection3.$().offset().top - ScrollContainer.$().offset().top  ;
+    ScrollContainer.setHeight(a + "px");
