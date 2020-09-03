@@ -1,0 +1,3115 @@
+class ZCL_NEPT_SD_RAILCAR_FOLLOWUP definition
+  public
+  final
+  create public .
+
+public section.
+
+  interfaces /NEPTUNE/IF_NAD_SERVER .
+
+  types:
+*
+    BEGIN OF ty_material,
+        matnr TYPE  mara-matnr,
+        maktx	TYPE makt-maktx,
+        matkl	TYPE mara-matkl,
+        meins	TYPE mara-meins,
+        wgbez TYPE wgbez,
+        vrkme	TYPE vrkme,
+        netpr	TYPE netpr,
+        ean11	TYPE ean11,
+        brgew TYPE mara-brgew,
+        ntgew TYPE mara-ntgew,
+        gewei TYPE mara-gewei,
+      END OF ty_material .
+  types:
+    BEGIN OF ty_material_unit,
+        matnr TYPE matnr,
+        meinh TYPE meinh,
+        umrez TYPE umrez,
+        umren TYPE umren,
+      END OF ty_material_unit .
+  types:
+    BEGIN OF ty_stock,
+        werks	TYPE werks_d,
+        lgort	TYPE lgort_d,
+        matnr	TYPE matnr,
+        labst	TYPE labst,
+        maktx	TYPE maktx,
+      END OF ty_stock .
+  types:
+    BEGIN OF ty_order_list,
+        doknr    TYPE doknr, " Document number
+        doktl_d  TYPE doktl_d, " Document part
+        dokvr    TYPE dokvr, " Document version
+        dktxt    TYPE dktxt, " Document description
+        status   TYPE dokst, " Internal status of document
+        stat_t   TYPE dostx, " Text of status
+        stat_c   TYPE string, " Color for status
+        vbeln    TYPE vbeln_va,  " Sale document if affected
+        posnr    TYPE posnr, " Sales document item
+        adatum   TYPE adatum, " Document creation date
+        wadat    TYPE wadat, " Good issue date
+        vbeln_vl TYPE vbeln_vl, " Delivery number
+        posnr_vl TYPE posnr_vl, " Delivery item
+        kunnr    TYPE kunnr,
+        name1    TYPE name1,
+        erdat    TYPE vbak-erdat,
+        netwr    TYPE vbak-netwr,
+        waerk    TYPE vbak-waerk,
+        bstkd    TYPE vbkd-bstkd, "CGN+
+        lifsk    TYPE vbak-lifsk,
+        lifsk_t  TYPE string,
+        lfgsk    TYPE vbuk-lfgsk,
+        lfgsk_t  TYPE string,
+        lfgsk_s  TYPE string,
+        filter   TYPE string,
+        icon     TYPE string,
+        error    TYPE string,
+      END OF ty_order_list .
+  types:
+    BEGIN OF ty_order_head,
+        doknr        TYPE doknr,   " Document number
+        doktl_d      TYPE doktl_d, " Document part
+        dokvr        TYPE dokvr,   " Document version
+        dktxt        TYPE dktxt,   " Description / Railcar number
+        dokst        TYPE dokst,   " Document status
+        uname        TYPE uname,   " User name
+        stat_glob    TYPE boolean, " Global status for document
+        stat_arch    TYPE boolean, " Archive status for document
+        lk_ord       TYPE boolean, " Linked with order True/False
+        tabs         TYPE string,  " Activation of tabs and icons
+        tfields      TYPE string,  " List of fields by tab
+        tvalues      TYPE string,  " List of values of characteristics
+        tvalues_save TYPE string,  " List of values of characteristics / saved for comparison
+        vbeln        TYPE vbak-vbeln, " Sales order / Transfert order
+        posnr        TYPE vbap-posnr, " item of order
+        vbeln_vl     TYPE vbeln_vl, " Delivery number
+        posnr_vl     TYPE posnr_vl, " Delivery item
+        bt_pick      TYPE boolean, " Activation of button pick
+        tknum        TYPE tknum,   " Transport number
+        tknum_txt    TYPE char20, " Transport number + status
+        tknum_act    TYPE boolean, " Flag shipment active
+        bt_in        TYPE boolean, " Activation of button check-in
+        bt_out       TYPE boolean, " Activation of button check-out
+        ord_txt      TYPE char20, " Order in text mode
+        del_txt      TYPE char25, " Delivery + item in text mode + status
+        del_act      TYPE boolean, "delivery exists
+        matnr        TYPE vbap-matnr, " Material
+        arktx        TYPE vbap-arktx, " Description
+        kwmeng       TYPE vbap-kwmeng, " Quantity
+        meins        TYPE vbap-meins,  " Unit
+        vkorg        TYPE vbak-vkorg,  " Sales org
+        vkorg_t      TYPE string,      " Sales org text
+        vtweg        TYPE vbak-vtweg,  " Distribution channel
+        vtweg_t      TYPE string,      " DC ch. text
+        spart        TYPE vbak-spart,  " Division
+        spart_t      TYPE string,      " Div part
+        vkbur        TYPE vbak-vkbur,  " Sales office
+        vkbur_t      TYPE string,      " so text
+        vkgrp        TYPE vbak-vkgrp,  " sales group
+        vkgrp_t      TYPE string,      " sales group text
+        kunnr        TYPE kunnr,       " sold-to
+        name1        TYPE kna1-name1,  " sold-to text
+        kunnr_we     TYPE kunnr,       " ship-to
+        name1_we     TYPE kna1-name1,  " ship-to text
+        auart        TYPE vbak-auart,  " type of order
+*        vbtyp    TYPE vbak-vbtyp,  "
+        erdat        TYPE vbak-erdat,  " creation date
+*        netwr    TYPE vbak-netwr,  "
+*        waerk    TYPE vbak-waerk,
+        vdatu        TYPE vbak-vdatu,
+*        angdt    TYPE vbak-angdt,
+*        bnddt    TYPE vbak-bnddt,
+        ret_save     TYPE string, " Return of save
+        "ret_action   TYPE string, " Return of action ==> it_return
+        ret_act_num  TYPE i,  " Number of error
+        zterm        TYPE vbkd-zterm,  " payment term
+        zterm_t      TYPE string,      " text of payment terms
+        bstkd        TYPE vbkd-bstkd,  " order reference
+        inco1        TYPE vbkd-inco1,  " inco1
+        inco2        TYPE vbkd-inco2,  " inco2
+        vsbed        TYPE vbak-vsbed,  " shipping
+        vsbed_t      TYPE string,      " shipping text
+      END OF ty_order_head .
+  types:
+    BEGIN OF ty_order_item,
+        vbeln   TYPE vbap-vbeln,
+        posnr   TYPE vbap-posnr,
+        matnr   TYPE vbap-matnr,
+        arktx   TYPE vbap-arktx,
+        netpr   TYPE vbap-netpr,
+        netwr   TYPE vbak-netwr,
+        abgru   TYPE vbap-abgru,
+        abgru_t TYPE string,
+        lfgsa   TYPE vbup-lfgsa,
+        lfgsa_t TYPE string,
+        lfgsa_s TYPE string,
+        kwmeng  TYPE vbap-kwmeng,
+        meins   TYPE vbap-meins,
+        werks   TYPE vbap-werks,
+        lgort   TYPE vbap-lgort,
+        vstel   TYPE vbap-vstel,
+        waerk   TYPE vbak-waerk,
+        matkl   TYPE mara-matkl,
+        wgbez   TYPE string,
+        ean11   TYPE vbap-ean11,
+        ntgew   TYPE vbap-ntgew,
+        brgew   TYPE vbap-brgew,
+        gewei   TYPE vbap-gewei,
+        enabled TYPE boolean,
+        vgbel   TYPE vbap-vgbel,
+        vgpos   TYPE vbap-vgpos,
+        vgtyp   TYPE vbap-vgtyp,
+      END OF ty_order_item .
+  types:
+    BEGIN OF ty_item_sched,
+        vbeln TYPE vbep-vbeln,
+        posnr TYPE vbep-posnr,
+        etenr TYPE vbep-etenr,
+        edatu TYPE vbep-edatu,
+        wmeng TYPE vbep-wmeng,
+        bmeng TYPE vbep-bmeng,
+        vrkme TYPE vbep-vrkme,
+        lddat TYPE vbep-lddat,
+        wadat TYPE vbep-wadat,
+      END OF ty_item_sched .
+  types:
+    BEGIN OF ty_order_flow,
+        posnr   TYPE vbap-posnr,
+        vbelv   TYPE vbfa-vbelv,
+        posnv   TYPE vbfa-posnv,
+        vbeln   TYPE vbfa-vbeln,
+        posnn   TYPE vbfa-posnn,
+        rfmng   TYPE vbfa-rfmng,
+        meins   TYPE vbfa-meins,
+        rfwrt   TYPE vbfa-rfwrt,
+        waers   TYPE vbfa-waers,
+        erdat   TYPE vbfa-erdat,
+        vbtyp_n TYPE vbfa-vbtyp_n,
+        vbtyp_t TYPE string,
+      END OF ty_order_flow .
+  types:
+    BEGIN OF ty_text,
+        content TYPE string,
+        tdname  TYPE string,
+        tdid    TYPE string,
+        tdtext  TYPE string,
+        sender  TYPE string,
+        time    TYPE string,
+        changed TYPE string,
+      END OF ty_text .
+  types:
+    BEGIN OF ty_attachment,
+        vbeln    TYPE vbak-vbeln,
+        instid_a TYPE sibfboriid,
+        instid_b TYPE sibfboriid,
+        crdat    TYPE so_dat_cr,
+        crtim    TYPE so_tim_cr,
+        docdes   TYPE so_obj_des,
+        file_ext TYPE file_ext,
+        content  TYPE string,
+      END OF ty_attachment .
+  types:
+    BEGIN OF ty_customer_list,
+        kunnr  TYPE kna1-kunnr,
+        name1  TYPE kna1-name1,
+        pstlz  TYPE kna1-pstlz,
+        ort01  TYPE kna1-ort01,
+        stras  TYPE kna1-stras,
+        filter TYPE string,
+      END OF ty_customer_list .
+  types:
+    BEGIN OF ty_cond_item,
+        posnr TYPE vbap-posnr,
+        kschl TYPE konp-kschl,
+        name  TYPE string,
+        kbetr TYPE konp-kbetr,
+        konwa TYPE konp-konwa,
+        kpein TYPE konp-kpein,
+        kmein TYPE konp-kmein,
+        kwert TYPE komv-kwert,
+        waerk TYPE komv-waers,
+      END OF ty_cond_item .
+  types:
+    BEGIN OF ty_ttxit,
+        tdid   TYPE ttxit-tdid,
+        tdtext TYPE ttxit-tdtext,
+      END OF ty_ttxit .
+  types:
+* List of documents
+    gty_doc_list TYPE STANDARD TABLE OF bapi_doc_draw .
+
+  constants GC_TEXT_SALES_ID type TDID value '0002' ##NO_TEXT.
+  constants GC_TEXT_SALES_OBJ type TDOBJECT value 'VBBP' ##NO_TEXT.
+  constants GC_TEXT_TRSF_ID type TDID value 'F01 ' ##NO_TEXT.
+  constants GC_TEXT_TRSF_OBJ type TDOBJECT value 'EKPO' ##NO_TEXT.
+  constants GC_CHAR_TEMPLATE type CHAR8 value 'ZLE_Z52_' ##NO_TEXT.
+  constants GC_CLASS_TYPE type KLASSENART value '017' ##NO_TEXT.
+  constants GC_DOC_TYPE_RC type DOKAR value 'Z52' ##NO_TEXT.
+  data IT_CHAR_HEADER type TT_BAPI_CHAR .       "For tab in screen
+  data IT_MENU_INFO type /NEPTUNE/MENU_TT .
+  data:
+    it_ttxit_head TYPE STANDARD TABLE OF ty_ttxit .
+  data:
+    it_ttxit_item TYPE STANDARD TABLE OF ty_ttxit .
+  data:
+    it_cond_item TYPE STANDARD TABLE OF ty_cond_item .
+  data:
+    it_cust_ag_list TYPE STANDARD TABLE OF ty_customer_list .
+  data:
+    it_cust_we_list TYPE STANDARD TABLE OF ty_customer_list .
+  data:
+    it_sync_attachment TYPE STANDARD TABLE OF ty_attachment .
+  data:
+    it_attachment TYPE STANDARD TABLE OF ty_attachment .
+  data:
+    it_dd07t TYPE STANDARD TABLE OF dd07t .
+  data:
+    it_text_head TYPE STANDARD TABLE OF ty_text .
+  data:
+    it_text_item TYPE STANDARD TABLE OF ty_text .
+  data:
+    it_order_list TYPE STANDARD TABLE OF ty_order_list .
+  data:
+    it_order_item TYPE STANDARD TABLE OF ty_order_item .
+  data:
+*    DATA:
+*      it_order_item TYPE STANDARD TABLE OF ty_order_item .
+*    DATA:
+*      it_stock TYPE STANDARD TABLE OF ty_stock .
+*    DATA:
+*      it_material_unit TYPE STANDARD TABLE OF ty_material_unit .
+*    DATA:
+*      it_material TYPE STANDARD TABLE OF ty_material .
+    it_item_sched TYPE STANDARD TABLE OF ty_item_sched .
+  data:
+*    DATA:
+*      it_order_flow TYPE STANDARD TABLE OF ty_order_flow .
+    it_tvakt TYPE STANDARD TABLE OF tvakt .
+  data:
+    it_stock TYPE STANDARD TABLE OF ty_stock .
+  data WA_DOC_DRAW2 type BAPI_DOC_DRAW2 .         " For document creation
+  data:
+    it_material_unit TYPE STANDARD TABLE OF ty_material_unit .
+  data:
+    it_material TYPE STANDARD TABLE OF ty_material .
+  data:
+    it_order_flow TYPE STANDARD TABLE OF ty_order_flow .
+  data WA_CUSTOMER_AG type ADRC .
+  data WA_CUSTOMER_WE type ADRC .
+  data WA_ORDER_LIST type TY_ORDER_LIST .
+  data WA_ORDER_HEAD type TY_ORDER_HEAD .
+  data WA_ORDER_ITEM type TY_ORDER_ITEM .
+  data WA_TEXT_HEAD type TY_TEXT .
+  data IT_RETURN type BAPIRET2_T .
+
+    "data IT_RETURN type BAPIRET2_T .
+  class-methods CREATE_CHECKLIST_MESSAGE
+    importing
+      !IS_DOC_INFO type BAPI_DOC_DRAW2
+      !IS_DOC_LINK type BAPI_DOC_DRAD optional
+    exporting
+      !ES_RETURN type BAPIRET2
+      !E_DOKNR type DOKNR .
+  class-methods CHECKLIST_CHECK_UNIQUE_LINK
+    importing
+      value(DOKOB) type DOKOB
+      value(OBJKY) type OBJKY
+    exporting
+      value(DOKNR) type DOKNR .
+  PROTECTED SECTION.
+private section.
+
+  methods _GET_DOC_LIST_AUTH_CHECK
+    importing
+      value(I_UNAME) type UNAME optional
+    changing
+      value(C_LABOR) type LABOR .
+  methods _GET_DOC_LIST_MM_ORDER_DETAIL
+    importing
+      !I_VBELN type VBELN
+      !I_POSNR type POSNR
+      !I_ORDER_LIST type TY_ORDER_LIST
+    exporting
+      !E_ORDER_LIST type TY_ORDER_LIST .
+  methods _GET_DOC_LIST_SD_ORDER_DETAIL
+    importing
+      !I_VBELN type VBELN
+      !I_POSNR type POSNR
+      !I_ORDER_LIST type TY_ORDER_LIST
+    exporting
+      !E_ORDER_LIST type TY_ORDER_LIST .
+  methods _SAVE_DOCUMENT
+    exporting
+      !ES_RETURN type STRING .
+  methods _SAVE_DOC_DET_STATUS
+    importing
+      !IT_HEADER type TT_BAPI_CHAR
+      value(IV_STAT_GLOB) type BOOLEAN
+      value(IV_STAT_ARCH) type BOOLEAN
+      value(IV_USER1) type UNAME
+      value(IV_USER2) type UNAME
+    exporting
+      !EV_USER type UNAME
+    changing
+      !CV_DOKST type DOKST .
+  methods _SAVE_DOC_STATUS
+    exporting
+      !ES_RETURN type STRING .
+  methods _GET_CHARACT_STRUCTURE
+    importing
+      !IV_CLASSNUM type KLASSE_D
+      value(IV_LANG_ISO) type LAISO optional
+    exporting
+      !ET_CHAR_HEADER type TT_BAPI_CHAR
+      !ET_CHAR_ITEM type TT_BAPI_CHAR
+      !EV_LANG_SAP type SPRAS .
+  methods _GET_TAB_SUM_COLOR
+    importing
+      !IT_CHAR_ITEM type TT_BAPI_CHAR
+      !IT_CHAR_VALUES type TT_BAPI_CHARACTERISTIC_VALUES
+    changing
+      !CT_CHAR_HEADER type TT_BAPI_CHAR .
+  methods ACTION
+    importing
+      !ACT_TYPE type STRING
+    exporting
+      !ES_RETURN type BAPIRET2_T
+      !ES_RETURN_NUM type I .
+  methods SAVE
+    exporting
+      !ES_RETURN type STRING .
+*    importing
+*      !AJAX_VALUE type STRING .
+  methods _SAVE_ORDER_TEXT .
+  methods GET_DOC_LIST
+    importing
+      !AJAX_VALUE type STRING .
+  methods GET_DETAIL_TAB_STRUCT
+    importing
+      !AJAX_VALUE type STRING .
+  methods GET_DETAIL_DELIVERY
+    importing
+      !AJAX_VALUE type STRING .
+  methods GET_DETAIL_SHIPMENT
+    importing
+      !AJAX_VALUE type STRING .
+  methods GET_DETAIL_ORDER_MM
+    importing
+      !AJAX_VALUE type STRING .
+  methods GET_DETAIL_ORDER_SD
+    importing
+      !AJAX_VALUE type STRING .
+  methods _GET_DETAIL_ORDER_TEXT .
+  methods _GET_DOC_DETAIL
+    importing
+      !IV_KEY type BAPI_DOC_AUX
+    exporting
+      !ET_DOC_DATA type BAPI_DOC_DRAW2
+      !ET_CHAR_VALUES type TT_BAPI_CHARACTERISTIC_VALUES .
+  methods _GET_DOC_LIST_DOCUMENT
+    importing
+      !IV_LABO type LABOR
+      !IV_ARCH type BOOLEAN
+    exporting
+      !ET_DOCUMENTS type GTY_DOC_LIST .
+ENDCLASS.
+
+
+
+CLASS ZCL_NEPT_SD_RAILCAR_FOLLOWUP IMPLEMENTATION.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->/NEPTUNE/IF_NAD_SERVER~HANDLE_ON_AJAX
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] APPLID                         TYPE        STRING
+* | [--->] AJAX_ID                        TYPE        STRING
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* | [--->] SERVER                         TYPE REF TO /NEPTUNE/CL_NAD_SERVER
+* | [--->] REQUEST                        TYPE        /NEPTUNE/DATA_REQUEST
+* | [<-->] NAVIGATION                     TYPE        /NEPTUNE/AJAX_NAVIGATION
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD /neptune/if_nad_server~handle_on_ajax.
+*** 1.1 - Christophe Gandin - Add option to search document in archive
+
+*** Copied from model ZCL_NAD_SD_DOCUMENT on DF1
+    DATA: l_ajax TYPE string.
+
+* Get Default Values
+*    CALL METHOD get_default_values( applid ).
+
+** MARK FLAG TO BE CATCHED IN EXIT on shipment change
+    CALL METHOD zcl_nu_utilities=>set_called_from_neptune
+      EXPORTING
+        i_called = abap_true.
+
+* Handle Ajax ID
+    CASE ajax_id.
+
+      WHEN 'GET_ORDER_LIST'.
+*        CALL METHOD get_order_list( ).
+        CALL METHOD get_doc_list( ajax_value  ).
+*        CALL METHOD get_select_data( ).
+
+      WHEN 'GET_ORDER_DETAIL'.
+        CLEAR: wa_order_head, wa_doc_draw2.
+        CALL METHOD get_detail_tab_struct( ajax_value ).
+        CALL METHOD get_detail_order_mm( ajax_value ).
+        CALL METHOD get_detail_order_sd( ajax_value ).
+        CALL METHOD get_detail_delivery( ajax_value ).
+        CALL METHOD get_detail_shipment( ajax_value ).
+        " Save char for comparison after
+        wa_order_head-tvalues_save = wa_order_head-tvalues.
+
+        " For characteristics
+        wa_doc_draw2-predocumentnumber = wa_order_head-vbeln.
+        wa_doc_draw2-predocumentpart   = wa_order_head-posnr.
+        wa_doc_draw2-documenttype      = gc_doc_type_rc.
+
+      WHEN 'SAVE'.
+        me->save(
+           IMPORTING
+             es_return = wa_order_head-ret_save
+               ).
+
+*        CALL METHOD save( ).
+*        CALL METHOD get_order_list( ).
+        CALL METHOD get_doc_list( space ).
+
+        "Action to repack back and check in and check out
+      WHEN 'ACTION'.
+        me->action(
+           EXPORTING
+             act_type      = ajax_value
+           IMPORTING
+             es_return     = it_return
+             es_return_num = wa_order_head-ret_act_num
+               ).
+
+        " If update is done, adjust delivery information and button info
+        READ TABLE it_return
+             TRANSPORTING NO FIELDS
+             WITH KEY type = 'S'.
+        IF sy-subrc = 0
+         OR wa_order_head-ret_act_num = 0.
+          CONCATENATE wa_order_head-vbeln wa_order_head-posnr wa_order_head-doknr wa_order_head-doktl_d wa_order_head-dokvr
+              INTO l_ajax SEPARATED BY '_'.
+          CALL METHOD get_detail_delivery( l_ajax ).
+          CALL METHOD get_detail_shipment( l_ajax ).
+        ENDIF.
+
+    ENDCASE.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->/NEPTUNE/IF_NAD_SERVER~HANDLE_ON_REQUEST
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] APPLID                         TYPE        STRING
+* | [--->] SERVER                         TYPE REF TO /NEPTUNE/CL_NAD_SERVER
+* | [--->] KEY_ID                         TYPE        STRING(optional)
+* | [--->] KEY                            TYPE        STRING
+* | [--->] REQUEST                        TYPE        /NEPTUNE/DATA_REQUEST
+* | [<-->] NAV_TO                         TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method /NEPTUNE/IF_NAD_SERVER~HANDLE_ON_REQUEST. "#EC NEEDED
+    " Do nothing
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->/NEPTUNE/IF_NAD_SERVER~HANDLE_ON_RESPONSE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] APPLID                         TYPE        STRING
+* | [--->] SERVER                         TYPE REF TO /NEPTUNE/CL_NAD_SERVER
+* | [--->] EVENT_ID                       TYPE        STRING
+* | [--->] EVENT_KEY                      TYPE        STRING
+* | [--->] KEY_ID                         TYPE        STRING(optional)
+* | [--->] KEY                            TYPE        STRING
+* | [--->] REQUEST                        TYPE        /NEPTUNE/DATA_REQUEST
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method /NEPTUNE/IF_NAD_SERVER~HANDLE_ON_RESPONSE. "#EC NEEDED
+    " Do nothing
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->/NEPTUNE/IF_NAD_SERVER~HANDLE_ON_SUBMIT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] APPLID                         TYPE        STRING
+* | [--->] EVENT_ID                       TYPE        STRING
+* | [--->] EVENT_VALUE                    TYPE        STRING(optional)
+* | [--->] SERVER                         TYPE REF TO /NEPTUNE/CL_NAD_SERVER
+* | [--->] REQUEST                        TYPE        /NEPTUNE/DATA_REQUEST
+* | [<-->] NAV_TO                         TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method /NEPTUNE/IF_NAD_SERVER~HANDLE_ON_SUBMIT. "#EC NEEDED
+    " Do nothing
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->/NEPTUNE/IF_NAD_SERVER~HANDLE_ON_SYNC_IN
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] APPLID                         TYPE        STRING(optional)
+* | [--->] SYNC_ID                        TYPE        STRING(optional)
+* | [--->] LASTSYNCDATE                   TYPE        STRING(optional)
+* | [--->] IT_SYNC_DATA                   TYPE        /NEPTUNE/SYNC_DATA_TT(optional)
+* | [<---] EX_STATUS                      TYPE        /NEPTUNE/SYNC_HEADER
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method /NEPTUNE/IF_NAD_SERVER~HANDLE_ON_SYNC_IN. "#EC NEEDED
+    " do nothing
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->/NEPTUNE/IF_NAD_SERVER~HANDLE_ON_SYNC_OUT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] APPLID                         TYPE        STRING
+* | [--->] LASTSYNCDATE                   TYPE        STRING
+* | [--->] SERVER                         TYPE REF TO /NEPTUNE/CL_NAD_SERVER
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  method /NEPTUNE/IF_NAD_SERVER~HANDLE_ON_SYNC_OUT. "#EC NEEDED
+    " do nothing
+  endmethod.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->ACTION
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] ACT_TYPE                       TYPE        STRING
+* | [<---] ES_RETURN                      TYPE        BAPIRET2_T
+* | [<---] ES_RETURN_NUM                  TYPE        I
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD action.
+    FIELD-SYMBOLS: <fs_char> TYPE bapi_characteristic_values.
+    DATA:
+      lt_char_values TYPE tt_bapi_characteristic_values,
+*      ls_return      TYPE bapiret2,
+      lt_return      TYPE STANDARD TABLE OF bapiret2,
+
+* Call function to run actions
+      i_charg        TYPE charg_d,
+      i_nista        TYPE ltap_nista,
+      i_altme        TYPE lrmei, "LBS
+*      i_date         TYPE dareg,
+*      i_time         TYPE uareg,
+      i_signi        TYPE signi,
+      i_exti1        TYPE exti1,
+      i_exti2        TYPE exti2,
+*      i_vhilm        TYPE vhilm, "packaging material
+      i_pick         TYPE flag,
+      i_checkin      TYPE flag,
+      i_checkout     TYPE flag.
+
+    CLEAR es_return.
+    " List of values
+    /ui2/cl_json=>deserialize( EXPORTING json = wa_order_head-tvalues pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = lt_char_values ).
+
+    " Get batch information
+    READ TABLE lt_char_values ASSIGNING <fs_char>
+         WITH KEY charname = 'ZLE_Z52_52A_BL_013'.
+    IF <fs_char> IS ASSIGNED.
+      i_charg = <fs_char>-charvalue.
+      UNASSIGN <fs_char>.
+    ENDIF.
+
+    " Get picked quantity
+    READ TABLE lt_char_values ASSIGNING <fs_char>
+         WITH KEY charname = 'ZLE_Z52_52A_BL_014'.
+    IF <fs_char> IS ASSIGNED.
+      i_nista = <fs_char>-charvalue.
+      UNASSIGN <fs_char>.
+    ENDIF.
+
+    " Get contener id
+    READ TABLE lt_char_values ASSIGNING <fs_char>
+         WITH KEY charname = 'ZLE_Z52_52A_GI_010'.
+    IF <fs_char> IS ASSIGNED.
+      i_signi = <fs_char>-charvalue.
+      UNASSIGN <fs_char>.
+    ENDIF.
+
+    " Get contener id / 2 times because we love that
+    READ TABLE lt_char_values ASSIGNING <fs_char>
+         WITH KEY charname = 'ZLE_Z52_52A_GI_010'.
+    IF <fs_char> IS ASSIGNED.
+      i_exti1 = <fs_char>-charvalue.
+      UNASSIGN <fs_char>.
+    ENDIF.
+
+    " Get seal information
+    READ TABLE lt_char_values ASSIGNING <fs_char>
+         WITH KEY charname = 'ZLE_Z52_52A_GI_007'.
+    IF <fs_char> IS ASSIGNED.
+      i_exti2 = <fs_char>-charvalue.
+      UNASSIGN <fs_char>.
+      READ TABLE lt_char_values ASSIGNING <fs_char>
+           WITH KEY charname = 'ZLE_Z52_52A_GI_008'.
+      IF <fs_char> IS ASSIGNED.
+        i_exti2 = i_exti2 && ',' && <fs_char>-charvalue.
+        UNASSIGN <fs_char>.
+        READ TABLE lt_char_values ASSIGNING <fs_char>
+             WITH KEY charname = 'ZLE_Z52_52A_GI_009'.
+        IF <fs_char> IS ASSIGNED.
+          i_exti2 = i_exti2 && ',' && <fs_char>-charvalue.
+          UNASSIGN <fs_char>.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+    i_altme = wa_order_head-meins. "Unit by default on the screen from 229-vrkme.
+
+    " Picking
+    IF act_type = 'PICK'.
+      i_pick = abap_true.
+      i_checkin = abap_false.
+      i_checkout = abap_false.
+
+    " Check-in
+    ELSEIF act_type = 'IN'.
+      i_pick = abap_false.
+      i_checkin = abap_true.
+      i_checkout = abap_false.
+
+    " Checkout
+    ELSEIF act_type = 'OUT'.
+      i_pick = abap_false.
+      i_checkin = abap_false.
+      i_checkout = abap_true.
+
+    " Other cases
+    ELSE.
+      i_pick = abap_false.
+      i_checkin = abap_false.
+      i_checkout = abap_false.
+    ENDIF.
+
+    CALL FUNCTION 'ZWOC_RAILCAR_MAIN'
+      EXPORTING
+        i_dokar      = gc_doc_type_rc
+        i_doknr      = wa_order_head-doknr
+        i_doktl      = wa_order_head-doktl_d
+        i_dokvr      = wa_order_head-dokvr
+        i_vbeln      = wa_order_head-vbeln_vl
+        i_tknum      = wa_order_head-tknum
+        i_matnr      = wa_order_head-matnr
+        i_charg      = i_charg
+        i_nista      = i_nista
+        i_altme      = i_altme
+*       I_DATE       = I_DATE
+*       I_TIME       = I_TIME
+        i_signi      = i_signi
+        i_exti1      = i_exti1
+        i_exti2      = i_exti2
+*       I_VHILM      = I_VHILM "optionnal, already sent by sterling
+        i_pick       = i_pick
+        i_checkin    = i_checkin
+        i_checkout   = i_checkout
+      TABLES
+        return       = lt_return
+      EXCEPTIONS
+        error_update = 1
+        no_change    = 2
+        update_ok    = 3.
+
+    CASE sy-subrc.
+      WHEN 0 OR 3.
+        CLEAR: es_return, es_return_num.
+      WHEN OTHERS.
+        DESCRIBE TABLE lt_return LINES es_return_num.
+        APPEND LINES OF lt_return TO es_return.
+        es_return = lt_return.
+    ENDCASE.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP=>CHECKLIST_CHECK_UNIQUE_LINK
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] DOKOB                          TYPE        DOKOB
+* | [--->] OBJKY                          TYPE        OBJKY
+* | [<---] DOKNR                          TYPE        DOKNR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD checklist_check_unique_link.
+* In standard, the system check the material and add the object to the first object.
+* So the test is done manually
+
+* Use the index to search doc
+    SELECT doknr FROM drad
+           INTO doknr
+           WHERE dokob = dokob
+             AND objky = objky
+             AND obzae = 0.
+      EXIT.
+    ENDSELECT.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Static Public Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP=>CREATE_CHECKLIST_MESSAGE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IS_DOC_INFO                    TYPE        BAPI_DOC_DRAW2
+* | [--->] IS_DOC_LINK                    TYPE        BAPI_DOC_DRAD(optional)
+* | [<---] ES_RETURN                      TYPE        BAPIRET2
+* | [<---] E_DOKNR                        TYPE        DOKNR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD create_checklist_message.
+* This method is called during message creation of sales order or transfer order
+* This method is called by program ZWOCF_RC_DOC_CREATION
+
+    DATA:
+      wa_documentdata     TYPE bapi_doc_draw2,
+*      ls_return       TYPE bapiret2,
+*      lv_vbeln        type vbeln,
+*      ls_objectlink   type BAPI_DOC_DRAD,
+      lt_classallocations TYPE STANDARD TABLE OF bapi_class_allocation,
+      ls_classallocations TYPE bapi_class_allocation,
+      lt_objectlink       TYPE STANDARD TABLE OF bapi_doc_drad.
+
+*** Get this information from message (nast)
+    wa_documentdata = is_doc_info.
+
+*** Create class allocation
+    ls_classallocations-classtype = gc_class_type.
+    ls_classallocations-classname = 'ZLE_' && gc_doc_type_rc && '_DOCUMENT'.
+    APPEND ls_classallocations TO lt_classallocations.
+    ls_classallocations-classtype = gc_class_type.
+    ls_classallocations-classname = 'ZLE_' && gc_doc_type_rc && '_' && is_doc_info-laboratory.
+    APPEND ls_classallocations TO lt_classallocations.
+
+*** Get information from message
+    APPEND is_doc_link TO lt_objectlink.
+
+    CALL FUNCTION 'BAPI_DOCUMENT_CREATE2'
+      EXPORTING
+        documentdata     = wa_documentdata
+*       HOSTNAME         = HOSTNAME
+*       DOCBOMCHANGENUMBER         = DOCBOMCHANGENUMBER
+*       DOCBOMVALIDFROM  = DOCBOMVALIDFROM
+*       DOCBOMREVISIONLEVEL        = DOCBOMREVISIONLEVEL
+*       CAD_MODE         = ' '
+*       PF_FTP_DEST      = ' '
+*       PF_HTTP_DEST     = ' '
+        defaultclass     = 'X'
+      IMPORTING
+*       DOCUMENTTYPE     = DOCUMENTTYPE
+        documentnumber   = e_doknr
+*       DOCUMENTPART     = DOCUMENTPART
+*       DOCUMENTVERSION  = DOCUMENTVERSION
+        return           = es_return
+      TABLES
+*       CHARACTERISTICVALUES       = CHARACTERISTICVALUES
+        classallocations = lt_classallocations
+*       DOCUMENTDESCRIPTIONS       = DOCUMENTDESCRIPTIONS
+        OBJECTLINKS      = lt_OBJECTLINK   " Bug with STO
+*       DOCUMENTSTRUCTURE          = DOCUMENTSTRUCTURE
+*       DOCUMENTFILES    = DOCUMENTFILES
+*       LONGTEXTS        = LONGTEXTS
+*       COMPONENTS       = COMPONENTS
+      .
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->GET_DETAIL_DELIVERY
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_detail_delivery.
+    TYPES: BEGIN OF ty_229,
+             vbeln    TYPE vbeln_va,
+             posnr    TYPE posnr,
+             wadat    TYPE wadat,
+             vbeln_vl TYPE vbeln_vl,
+             posnr_vl TYPE posnr_vl,
+             vrkme    TYPE vrkme, "unit
+             bmeng    TYPE bmeng, "confirmed quantity
+             lfimg    TYPE lfimg, "delivered quantity
+           END OF ty_229.
+
+    DATA:
+      wa_229   TYPE ty_229,
+      it_229   TYPE STANDARD TABLE OF ty_229,
+      wl_item  TYPE char10,
+      wl_lvstk TYPE lvstk,
+      wl_wbstk TYPE wbstk.
+*      lv_posnr TYPE posnr.
+
+* Main information is document
+* If Ajax value is empty, do not display sales informations
+    SPLIT  ajax_value AT '_' INTO wa_order_head-vbeln wa_order_head-posnr wa_order_head-doknr wa_order_head-doktl_d wa_order_head-dokvr.
+
+
+* Get good issue information (from order report / ZWOCT04800)
+    SELECT vbeln posnr wadat vbeln_vl posnr_vl vrkme bmeng lfimg
+           FROM zwoct229
+           INTO TABLE it_229
+           WHERE vbeln EQ wa_order_head-vbeln
+             AND posnr EQ wa_order_head-posnr.
+    CLEAR: wa_229, wa_order_head-vbeln_vl, wa_order_head-posnr_vl,
+           wa_order_head-vdatu, wa_order_head-kwmeng, wa_order_head-meins.
+    LOOP AT it_229 INTO wa_229
+         WHERE vbeln EQ wa_order_head-vbeln
+           AND posnr EQ wa_order_head-posnr.
+      IF wa_229-vbeln_vl IS NOT INITIAL.
+        wa_order_head-vbeln_vl = wa_229-vbeln_vl.
+        wa_order_head-posnr_vl = wa_229-posnr_vl.
+      ENDIF.
+      wa_order_head-vdatu    = wa_229-wadat.
+      wa_order_head-meins    = wa_229-vrkme.
+      IF wa_229-lfimg IS NOT INITIAL.
+        wa_order_head-kwmeng = wa_order_head-kwmeng + wa_229-lfimg. "Delivery qty
+      ELSE.
+        wa_order_head-kwmeng = wa_order_head-kwmeng + wa_229-bmeng. "Confirmed qty
+      ENDIF.
+    ENDLOOP.
+
+* Save delivery in text mode
+    IF wa_order_head-vbeln_vl IS INITIAL.
+      CLEAR wa_order_head-del_txt.
+      wa_order_head-del_act = abap_false.
+    ELSE.
+      wa_order_head-del_act = abap_true.
+      wl_item = wa_order_head-posnr_vl.
+      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+        EXPORTING
+          input  = wl_item
+        IMPORTING
+          output = wl_item.
+      wa_order_head-del_txt = wa_order_head-vbeln_vl.
+      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+        EXPORTING
+          input  = wa_order_head-del_txt
+        IMPORTING
+          output = wa_order_head-del_txt.
+      CONCATENATE wa_order_head-del_txt '-' wl_item INTO wa_order_head-del_txt SEPARATED BY space.
+    ENDIF.
+
+* Get status of delevery
+    SELECT SINGLE lvstk wbstk FROM vbuk
+           INTO (wl_lvstk, wl_wbstk)
+           WHERE vbeln = wa_order_head-vbeln_vl.
+    IF wl_wbstk = 'C'.
+      wa_order_head-del_txt = wa_order_head-del_txt && '-COMP'. " Completed
+    ELSEIF wl_lvstk = 'C'.
+      wa_order_head-del_txt = wa_order_head-del_txt && '-PICK'. " Picked
+    ENDIF.
+
+    " Display button only if pick-in is feasible
+    IF NOT wa_order_head-del_txt CS 'COMP'
+     AND NOT wa_order_head-del_txt CS 'PICK'
+     AND wa_order_head-vbeln_vl IS NOT INITIAL.
+      wa_order_head-bt_pick = abap_true.
+    ELSE.
+      wa_order_head-bt_pick = abap_false.
+    ENDIF.
+
+* Save order in text mode
+    wl_item = wa_order_head-posnr.
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+      EXPORTING
+        input  = wl_item
+      IMPORTING
+        output = wl_item.
+    wa_order_head-ord_txt = wa_order_head-vbeln.
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+      EXPORTING
+        input  = wa_order_head-ord_txt
+      IMPORTING
+        output = wa_order_head-ord_txt.
+    CONCATENATE wa_order_head-ord_txt '-' wl_item INTO wa_order_head-ord_txt SEPARATED BY space.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->GET_DETAIL_ORDER_MM
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_detail_order_mm.
+    types: begin of ty_ekko,
+            aedat type aedat,
+            bsart type bsart,
+            ebeln type ebeln,
+            ihrez type ihrez,
+            zterm type zterm,
+           end of ty_ekko.
+    types: begin of ty_kna1,
+             adrnr type adrnr,
+             kunnr type kunnr,
+             name1 type name1,
+           end of ty_kna1,
+           begin of ty_vbup,
+             vbeln type vbeln,
+             posnr type posnr,
+           end of ty_vbup,
+           begin of ty_ekpv,
+             KUNNR type kunnr,
+             LEDAT type ledat,
+             SPART type spart,
+             VKORG type vkorg,
+             VSBED type vsbed,
+             VTWEG type vtweg,
+           end of ty_ekpv.
+
+    DATA: "it_ekpo  TYPE STANDARD TABLE OF ekpo,
+          it_vbup  TYPE STANDARD TABLE OF ty_vbup,
+          it_t023t TYPE STANDARD TABLE OF t023t,
+          wa_kna1  TYPE ty_kna1,
+*          wa_vbpa  TYPE vbpa,
+          wa_adrc  TYPE adrc,
+          wa_ekpo  TYPE ekpo,
+          wa_vbkd  TYPE vbkd,
+          wa_ekko  TYPE ty_ekko,
+          wa_ekpv  TYPE ty_ekpv,
+*          wa_vbuk  TYPE vbuk,
+          lv_posnr TYPE posnr.
+
+* Main information is document
+* If Ajax value is empty, do not display sales informations
+    SPLIT  ajax_value AT '_' INTO wa_order_head-vbeln lv_posnr wa_order_head-doknr wa_order_head-doktl_d wa_order_head-dokvr.
+    IF wa_order_head-vbeln = '-'.
+      wa_order_head-lk_ord = abap_false.
+    ELSE.
+      wa_order_head-lk_ord = abap_true.
+    ENDIF.
+
+*---------------------------------------------------------------------*
+* GET DATA
+*---------------------------------------------------------------------*
+
+* Get EKKO
+    SELECT SINGLE aedat bsart ebeln ihrez zterm
+           FROM ekko
+           INTO wa_ekko
+           WHERE ebeln EQ ajax_value.
+    if sy-subrc <> 0.
+      return.
+    endif.
+
+* Get EKPV
+    SELECT SINGLE KUNNR LEDAT SPART VKORG VSBED VTWEG
+           FROM ekpv
+           INTO wa_ekpv
+           WHERE ebeln EQ ajax_value
+             AND ebelp = lv_posnr.
+
+* Get VBKD
+*    SELECT SINGLE *
+*           FROM vbkd
+*           INTO wa_vbkd
+*           WHERE vbeln EQ ajax_value
+*             AND posnr = space.
+
+* Get VBAP
+    SELECT single *
+           FROM ekpo
+           INTO wa_ekpo
+           WHERE ebeln EQ ajax_value
+             AND ebelp EQ lv_posnr.
+
+    IF wa_ekpo IS NOT INITIAL.
+
+*    Get VBUP
+      SELECT vbeln posnr
+             FROM vbup
+             INTO TABLE it_vbup
+             WHERE vbeln EQ ajax_value
+               AND posnr EQ lv_posnr.
+
+*    Get T023T
+      SELECT *
+             FROM t023t
+             INTO TABLE it_t023t
+             "FOR ALL ENTRIES IN it_ekpo
+             WHERE spras EQ sy-langu
+               AND matkl EQ wa_ekpo-matkl.
+
+*   Get VBEP
+*      SELECT *
+*             FROM vbep
+*             INTO CORRESPONDING FIELDS OF TABLE it_item_sched
+*             FOR ALL ENTRIES IN it_ekpo
+*             WHERE vbeln EQ it_ekpo-ebeln
+*               AND posnr EQ it_ekpo-posnr.
+
+    ENDIF.
+
+* Get Status Text
+*    SELECT *
+*           FROM dd07t
+*           INTO TABLE it_dd07t
+*           WHERE domname    IN ('STATV','VBTYP')
+*             AND ddlanguage EQ sy-langu.
+
+* Sorting
+*    SORT it_dd07t BY domname domvalue_l.
+    SORT it_t023t BY matkl.
+    SORT it_vbup  BY vbeln posnr.
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - HEADER
+*---------------------------------------------------------------------*
+
+* DD07T
+*    READ TABLE it_dd07t INTO wa_dd07t WITH KEY domname    = 'STATV'
+*                                               domvalue_l = wa_vbuk-lfgsk BINARY SEARCH.
+
+    wa_order_head-zterm     = wa_vbkd-zterm.
+    wa_order_head-bstkd     = wa_ekko-ihrez.
+    wa_order_head-inco1     = wa_vbkd-inco1.
+    wa_order_head-inco2     = wa_vbkd-inco2.
+    wa_order_head-vbeln     = wa_ekko-ebeln.
+    wa_order_head-vkorg     = wa_ekpv-vkorg    .
+    wa_order_head-vtweg     = wa_ekpv-vtweg    .
+    wa_order_head-spart     = wa_ekpv-spart    .
+    wa_order_head-kunnr     = wa_ekpv-kunnr    .
+*    wa_order_head-vkbur     = wa_vbak-vkbur    . TODO
+*    wa_order_head-vkgrp     = wa_vbak-vkgrp    . TODO
+    wa_order_head-auart     = wa_ekko-bsart    .
+*    wa_order_head-vbtyp     = wa_vbak-vbtyp    .
+    wa_order_head-erdat     = wa_ekko-aedat    .
+*    wa_order_head-netwr     = wa_vbak-netwr    .
+*    wa_order_head-waerk     = wa_vbak-waerk    .
+    wa_order_head-vdatu     = wa_ekpv-ledat    .
+*    wa_order_head-angdt     = wa_vbak-angdt    .
+*    wa_order_head-bnddt     = wa_vbak-bnddt    .
+    wa_order_head-vsbed     = wa_ekpv-vsbed    .
+    wa_order_head-name1   = wa_kna1-name1.
+
+*    CASE wa_order_head-lfgsk.
+*
+*      WHEN 'A'.
+*        wa_order_head-lfgsk_s = 'Error'.                    "#EC NOTEXT
+*
+*      WHEN 'B'.
+*        wa_order_head-lfgsk_s = 'Warning'.                  "#EC NOTEXT
+*
+*      WHEN 'C'.
+*        wa_order_head-lfgsk_s = 'Success'.                  "#EC NOTEXT
+*
+*      WHEN OTHERS.
+*        wa_order_head-lfgsk_s = 'None'.                     "#EC NOTEXT
+*
+*    ENDCASE.
+
+*    READ TABLE it_ekpo INTO wa_ekpo INDEX 1. "One item.
+*    IF sy-subrc = 0.
+      wa_order_head-posnr     = wa_ekpo-ebelp    .
+      wa_order_head-matnr     = wa_ekpo-matnr    .
+      wa_order_head-arktx     = wa_ekpo-txz01    .
+*      wa_order_head-kwmeng    = wa_ekpo-menge   .  "from woct229
+*      wa_order_head-meins     = wa_ekpo-meins    . "from woct229
+*    ENDIF.
+
+*---------------------------------------------------------------------*
+* BUILD DATA - SOLD TO
+*---------------------------------------------------------------------*
+
+* Get KNA1
+    SELECT SINGLE adrnr kunnr name1
+           FROM kna1
+           INTO wa_kna1
+           WHERE kunnr EQ wa_order_head-kunnr.
+
+* Get ADRC
+    SELECT *
+           FROM adrc
+           INTO wa_adrc
+           WHERE addrnumber EQ wa_kna1-adrnr.
+      EXIT.
+    ENDSELECT.
+
+    wa_order_head-kunnr = wa_kna1-kunnr.
+    wa_order_head-name1 = wa_kna1-name1.
+
+    MOVE-CORRESPONDING wa_adrc TO wa_customer_ag.
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - SHIP TO
+*---------------------------------------------------------------------*
+
+* Get KNA1 // Same ship-to as sold-to replenishment
+*    clear wa_kna1.
+*    SELECT SINGLE *
+*           FROM kna1
+*           INTO wa_kna1
+*           WHERE kunnr EQ wa_vbpa-kunnr.
+*
+** Get ADRC
+*    SELECT *
+*           FROM adrc
+*           INTO wa_adrc
+*           WHERE addrnumber EQ wa_kna1-adrnr.
+*      EXIT.
+*    ENDSELECT.
+    wa_order_head-kunnr_we = wa_kna1-kunnr.
+    wa_order_head-name1_we = wa_kna1-name1.
+
+    MOVE-CORRESPONDING wa_adrc TO wa_customer_we.
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - INFO
+*---------------------------------------------------------------------*
+
+* VKORG
+    SELECT SINGLE vtext
+           FROM tvkot
+           INTO wa_order_head-vkorg_t
+           WHERE spras EQ sy-langu
+             AND vkorg EQ wa_ekpv-vkorg.
+
+* VTWEG
+    SELECT SINGLE vtext
+           FROM tvtwt
+           INTO wa_order_head-vtweg_t
+           WHERE spras EQ sy-langu
+             AND vtweg EQ wa_ekpv-vtweg.
+
+* TSPAT
+    SELECT SINGLE vtext
+           FROM tspat
+           INTO wa_order_head-spart_t
+           WHERE spras EQ sy-langu
+             AND spart EQ wa_ekpv-spart.
+
+* TVGRT
+*    SELECT SINGLE bezei
+*           FROM tvgrt
+*           INTO wa_order_head-vkgrp_t
+*           WHERE spras EQ sy-langu
+*             AND vkgrp EQ wa_vbak-vkgrp.
+*
+** TVKBT
+*    SELECT SINGLE bezei
+*           FROM tvkbt
+*           INTO wa_order_head-vkbur_t
+*           WHERE spras EQ sy-langu
+*             AND vkbur EQ wa_vbak-vkbur.
+
+* T052U
+    SELECT text1
+           FROM t052u
+           INTO wa_order_head-zterm_t
+           WHERE spras EQ sy-langu
+             AND zterm EQ wa_ekko-zterm.
+      EXIT.
+    ENDSELECT.
+
+* TVSBT
+    SELECT SINGLE vtext
+           FROM tvsbt
+           INTO wa_order_head-vsbed_t
+           WHERE spras EQ sy-langu
+             AND vsbed EQ wa_ekpv-vsbed.
+*
+*--------------------------------------------------------------------*
+* GET OTHER DATA
+*--------------------------------------------------------------------*
+* Texts
+    CALL METHOD _get_detail_order_text( ).
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->GET_DETAIL_ORDER_SD
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_detail_order_sd.
+    TYPES: BEGIN OF ty_kna1,
+             adrnr TYPE adrnr,
+             kunnr TYPE kunnr,
+             name1 TYPE name1,
+           END OF ty_kna1,
+           BEGIN OF ty_vbak,
+             auart TYPE auart,
+             erdat TYPE erdat,
+             kunnr TYPE kunnr,
+             spart TYPE spart,
+             vbeln TYPE vbeln,
+             vkbur TYPE vkbur,
+             vkgrp TYPE vkgrp,
+             vkorg TYPE vkorg,
+             vsbed TYPE vsbed,
+             vtweg TYPE vtweg,
+           END OF ty_vbak,
+           BEGIN OF ty_vbup,
+             vbeln TYPE vbeln,
+             posnr TYPE posnr,
+           END OF ty_vbup,
+           BEGIN OF ty_vbkd,
+             bstkd TYPE bstkd,
+             inco1 TYPE inco1,
+             inco2 TYPE inco2,
+             zterm TYPE zterm,
+           END OF ty_vbkd.
+
+    DATA: "it_vbap  TYPE STANDARD TABLE OF vbap,
+      it_vbup  TYPE STANDARD TABLE OF ty_vbup,
+      it_t023t TYPE STANDARD TABLE OF t023t,
+      wa_kna1  TYPE ty_kna1,
+*          wa_vbpa  TYPE vbpa,
+      wa_adrc  TYPE adrc,
+      wa_vbap  TYPE vbap,
+      wa_vbkd  TYPE ty_vbkd,
+      wa_vbak  TYPE ty_vbak,
+*      wa_lfgsk TYPE vbuk-lfgsk,
+      lv_kunnr TYPE kunnr,
+      lv_posnr TYPE posnr.
+
+* Main information is document
+* If Ajax value is empty, do not display sales informations
+    SPLIT  ajax_value AT '_' INTO wa_order_head-vbeln lv_posnr wa_order_head-doknr wa_order_head-doktl_d wa_order_head-dokvr.
+    IF wa_order_head-vbeln = '-'.
+      wa_order_head-lk_ord = abap_false.
+    ELSE.
+      wa_order_head-lk_ord = abap_true.
+    ENDIF.
+
+*---------------------------------------------------------------------*
+* GET DATA
+*---------------------------------------------------------------------*
+
+* Get VBAK
+    SELECT SINGLE auart erdat kunnr spart vbeln vkbur vkgrp vkorg vsbed vtweg
+           FROM vbak
+           INTO wa_vbak
+           WHERE vbeln EQ ajax_value.
+
+    " Possible to be in the case of transfer document
+    IF sy-subrc <> 0.
+      RETURN.
+    ENDIF.
+
+* Get VBUK
+*    SELECT SINGLE lfgsk
+*           FROM vbuk
+*           INTO wa_lfgsk
+*           WHERE vbeln EQ ajax_value.
+
+* Get VBKD
+    SELECT SINGLE bstkd inco1 inco2 zterm
+           FROM vbkd
+           INTO wa_vbkd
+           WHERE vbeln EQ ajax_value
+             AND posnr = space.
+
+* Get VBAP
+    CLEAR wa_vbap.
+    SELECT SINGLE *
+           FROM vbap
+           INTO wa_vbap
+           WHERE vbeln EQ ajax_value
+             AND posnr EQ lv_posnr.
+
+    IF wa_vbap IS NOT INITIAL.
+
+*    Get VBUP
+      SELECT vbeln posnr
+             FROM vbup
+             INTO TABLE it_vbup
+             WHERE vbeln EQ ajax_value
+               AND posnr EQ lv_posnr.
+
+*    Get T023T
+      SELECT *
+             FROM t023t
+             INTO TABLE it_t023t
+             "FOR ALL ENTRIES IN it_vbap
+             WHERE spras EQ sy-langu
+               AND matkl EQ wa_vbap-matkl.
+
+*   Get VBEP
+      SELECT *
+             FROM vbep
+             INTO CORRESPONDING FIELDS OF TABLE it_item_sched
+             "FOR ALL ENTRIES IN it_vbap
+             WHERE vbeln EQ wa_vbap-vbeln
+               AND posnr EQ wa_vbap-posnr.
+
+    ENDIF.
+
+* Get Status Text
+*    SELECT *
+*           FROM dd07t
+*           INTO TABLE it_dd07t
+*           WHERE domname    IN ('STATV','VBTYP')
+*             AND ddlanguage EQ sy-langu.
+
+* Sorting
+    SORT it_dd07t BY domname domvalue_l.
+    SORT it_t023t BY matkl.
+    SORT it_vbup  BY vbeln posnr.
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - HEADER
+*---------------------------------------------------------------------*
+
+* DD07T
+*    READ TABLE it_dd07t INTO wa_dd07t WITH KEY domname    = 'STATV'
+*                                               domvalue_l = wa_lfgsk BINARY SEARCH.
+
+    wa_order_head-zterm     = wa_vbkd-zterm.
+    wa_order_head-bstkd     = wa_vbkd-bstkd.
+    wa_order_head-inco1     = wa_vbkd-inco1.
+    wa_order_head-inco2     = wa_vbkd-inco2.
+    wa_order_head-vbeln     = wa_vbak-vbeln.
+    wa_order_head-vkorg     = wa_vbak-vkorg    .
+    wa_order_head-vtweg     = wa_vbak-vtweg    .
+    wa_order_head-spart     = wa_vbak-spart    .
+    wa_order_head-kunnr     = wa_vbak-kunnr    .
+    wa_order_head-vkbur     = wa_vbak-vkbur    .
+    wa_order_head-vkgrp     = wa_vbak-vkgrp    .
+    wa_order_head-auart     = wa_vbak-auart    .
+*    wa_order_head-vbtyp     = wa_vbak-vbtyp    .
+    wa_order_head-erdat     = wa_vbak-erdat    .
+*    wa_order_head-netwr     = wa_vbak-netwr    .
+*    wa_order_head-waerk     = wa_vbak-waerk    .
+*    wa_order_head-vdatu     = wa_vbak-vdatu    .
+*    wa_order_head-angdt     = wa_vbak-angdt    .
+*    wa_order_head-bnddt     = wa_vbak-bnddt    .
+    wa_order_head-vsbed     = wa_vbak-vsbed    .
+    wa_order_head-name1   = wa_kna1-name1.
+
+*    CASE wa_order_head-lfgsk.
+*
+*      WHEN 'A'.
+*        wa_order_head-lfgsk_s = 'Error'.                    "#EC NOTEXT
+*
+*      WHEN 'B'.
+*        wa_order_head-lfgsk_s = 'Warning'.                  "#EC NOTEXT
+*
+*      WHEN 'C'.
+*        wa_order_head-lfgsk_s = 'Success'.                  "#EC NOTEXT
+*
+*      WHEN OTHERS.
+*        wa_order_head-lfgsk_s = 'None'.                     "#EC NOTEXT
+*
+*    ENDCASE.
+
+    wa_order_head-posnr     = wa_vbap-posnr    .
+    wa_order_head-matnr     = wa_vbap-matnr    .
+    wa_order_head-arktx     = wa_vbap-arktx    .
+    wa_order_head-kwmeng    = wa_vbap-kwmeng   .
+    wa_order_head-meins     = wa_vbap-meins    .
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - SOLD TO
+*---------------------------------------------------------------------*
+
+* Get KNA1
+    SELECT SINGLE adrnr kunnr name1
+           FROM kna1
+           INTO wa_kna1
+           WHERE kunnr EQ wa_order_head-kunnr.
+
+* Get ADRC
+    SELECT *
+           FROM adrc
+           INTO wa_adrc
+           WHERE addrnumber EQ wa_kna1-adrnr.
+      EXIT.
+    ENDSELECT.
+
+    wa_order_head-kunnr = wa_kna1-kunnr.
+    wa_order_head-name1 = wa_kna1-name1.
+
+    MOVE-CORRESPONDING wa_adrc TO wa_customer_ag.
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - SHIP TO
+*---------------------------------------------------------------------*
+
+* Get VBPA
+    SELECT kunnr
+           FROM vbpa
+           INTO lv_kunnr
+           WHERE vbeln EQ wa_order_head-vbeln
+             AND parvw EQ 'WE'.
+      EXIT.
+    ENDSELECT.
+
+* Get KNA1
+    SELECT SINGLE adrnr kunnr name1
+           FROM kna1
+           INTO wa_kna1
+           WHERE kunnr EQ lv_kunnr.
+
+* Get ADRC
+    SELECT *
+           FROM adrc
+           INTO wa_adrc
+           WHERE addrnumber EQ wa_kna1-adrnr.
+      EXIT.
+    ENDSELECT.
+
+    wa_order_head-kunnr_we = wa_kna1-kunnr.
+    wa_order_head-name1_we = wa_kna1-name1.
+
+    MOVE-CORRESPONDING wa_adrc TO wa_customer_we.
+
+
+*---------------------------------------------------------------------*
+* BUILD DATA - INFO
+*---------------------------------------------------------------------*
+
+* VKORG
+    SELECT SINGLE vtext
+           FROM tvkot
+           INTO wa_order_head-vkorg_t
+           WHERE spras EQ sy-langu
+             AND vkorg EQ wa_vbak-vkorg.
+
+* VTWEG
+    SELECT SINGLE vtext
+           FROM tvtwt
+           INTO wa_order_head-vtweg_t
+           WHERE spras EQ sy-langu
+             AND vtweg EQ wa_vbak-vtweg.
+
+* TSPAT
+    SELECT SINGLE vtext
+           FROM tspat
+           INTO wa_order_head-spart_t
+           WHERE spras EQ sy-langu
+             AND spart EQ wa_vbak-spart.
+
+* TVGRT
+    SELECT SINGLE bezei
+           FROM tvgrt
+           INTO wa_order_head-vkgrp_t
+           WHERE spras EQ sy-langu
+             AND vkgrp EQ wa_vbak-vkgrp.
+
+* TVKBT
+    SELECT SINGLE bezei
+           FROM tvkbt
+           INTO wa_order_head-vkbur_t
+           WHERE spras EQ sy-langu
+             AND vkbur EQ wa_vbak-vkbur.
+
+* T052U
+    SELECT text1
+           FROM t052u
+           INTO wa_order_head-zterm_t
+           WHERE spras EQ sy-langu
+             AND zterm EQ wa_vbkd-zterm.
+      EXIT.
+    ENDSELECT.
+
+* TVSBT
+    SELECT SINGLE vtext
+           FROM tvsbt
+           INTO wa_order_head-vsbed_t
+           WHERE spras EQ sy-langu
+             AND vsbed EQ wa_vbak-vsbed.
+
+*--------------------------------------------------------------------*
+* GET OTHER DATA
+*--------------------------------------------------------------------*
+* Texts
+    CALL METHOD _get_detail_order_text( ).
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->GET_DETAIL_SHIPMENT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_detail_shipment.
+    DATA: wl_sttrg TYPE vttk-sttrg.
+
+* Main information is document
+* If Ajax value is empty, do not display sales informations
+    SPLIT  ajax_value AT '_' INTO wa_order_head-vbeln wa_order_head-posnr wa_order_head-doknr wa_order_head-doktl_d wa_order_head-dokvr.
+
+* Get number of transport
+    CLEAR  wa_order_head-tknum_txt.
+    SELECT tknum FROM vttp
+           UP TO 1 ROWS
+           INTO wa_order_head-tknum
+           WHERE vbeln = wa_order_head-vbeln_vl.
+      EXIT.
+    ENDSELECT.
+    IF sy-subrc <> 0.
+      wa_order_head-tknum_act = abap_false.
+      RETURN.
+    ENDIF.
+    wa_order_head-tknum_act = abap_true.
+
+* Get status of transport
+    SELECT SINGLE sttrg FROM vttk
+           INTO wl_sttrg
+           WHERE tknum = wa_order_head-tknum.
+
+    " Conversion in external format (without 0)
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+      EXPORTING
+        input  = wa_order_head-tknum
+      IMPORTING
+        output = wa_order_head-tknum_txt.
+
+    IF wl_sttrg = 0.
+    ELSEIF  wl_sttrg = 1.
+      wa_order_head-tknum_txt = wa_order_head-tknum_txt && '-PLA'. "Planned
+    ELSEIF wl_sttrg <= 4.
+      wa_order_head-tknum_txt = wa_order_head-tknum_txt && '-CHI'. " Check-in
+    ELSEIF wl_sttrg >= 5.
+      wa_order_head-tknum_txt = wa_order_head-tknum_txt && '-CHO'. " Check out
+    ENDIF.
+
+    " Activation of button check-in
+    IF wa_order_head-tknum IS NOT INITIAL
+     AND NOT wa_order_head-tknum_txt CS '-CHO'.
+      wa_order_head-bt_in = abap_true.
+    ELSE.
+      wa_order_head-bt_in = abap_false.
+    ENDIF.
+
+    " Activation of button check-out
+    IF wa_order_head-del_txt CS 'PICK'
+     AND wa_order_head-tknum_txt CS 'CHI'.
+      wa_order_head-bt_out = abap_true.
+    ELSE.
+      wa_order_head-bt_out = abap_false.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->GET_DETAIL_TAB_STRUCT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_detail_tab_struct.
+* We have decided to add a special class to document with a list of characteristics
+* this class depends on the laboratory
+* Name of the class = ZLE_Z52_52A where 52A is the laboratory
+    DATA:
+      ls_key         TYPE bapi_doc_aux,
+      ls_doc_data    TYPE bapi_doc_draw2,
+      lv_classnum    TYPE klasse_d,
+      lv_dummy       TYPE posnr,                            "#EC NEEDED
+      lt_char_header TYPE tt_bapi_char,
+      lt_char_item   TYPE tt_bapi_char,
+      lt_char_values TYPE tt_bapi_characteristic_values,
+      lv_lang        TYPE laiso.
+
+
+* Main information is document
+* If Ajax value is empty, do not display sales informations
+    SPLIT  ajax_value AT '_' INTO wa_order_head-vbeln lv_dummy wa_order_head-doknr wa_order_head-doktl_d wa_order_head-dokvr lv_lang.
+    IF wa_order_head-vbeln = '-'.
+      wa_order_head-lk_ord = abap_false.
+    ELSE.
+      wa_order_head-lk_ord = abap_true.
+    ENDIF.
+
+* Get name of the laboratory
+    ls_key-doctype    = gc_doc_type_rc.
+    ls_key-docnumber  = wa_order_head-doknr.
+    ls_key-docpart    = wa_order_head-doktl_d.
+    ls_key-docversion = wa_order_head-dokvr.
+    ls_key-lang_iso   = lv_lang.
+    me->_get_doc_detail(
+      EXPORTING
+        iv_key      = ls_key
+      IMPORTING
+        et_doc_data    = ls_doc_data
+        et_char_values = lt_char_values
+           ).
+    wa_order_head-dktxt = ls_doc_data-description.
+    " Global status active
+    IF ls_doc_data-statusintern = 'W6'.
+      wa_order_head-stat_glob = abap_true.
+    ENDIF.
+    " Archived status active
+    IF ls_doc_data-statusintern = 'AR'.
+      wa_order_head-stat_glob = abap_true.
+      wa_order_head-stat_arch = abap_true.
+    ENDIF.
+    wa_order_head-dokst = ls_doc_data-statusintern.
+
+
+* Get list of characteristics
+    lv_classnum = gc_char_template && ls_doc_data-laboratory.
+    me->_get_charact_structure(
+      EXPORTING
+        iv_classnum    = lv_classnum
+        iv_lang_iso    = lv_lang
+      IMPORTING
+        et_char_header = lt_char_header
+        et_char_item   = lt_char_item
+*      ev_lang_sap    = ev_lang_sap
+           ).
+
+* Get tab sum and color
+    me->_get_tab_sum_color(
+      EXPORTING
+        it_char_item   = lt_char_item
+        it_char_values = lt_char_values
+      CHANGING
+        ct_char_header = lt_char_header
+           ).
+
+* Add information into list of
+    " List of tabs and activation
+    wa_order_head-tabs    = /ui2/cl_json=>serialize( data = lt_char_header[] compress = abap_true pretty_name = /ui2/cl_json=>pretty_mode-camel_case ).
+    " List of fields
+    wa_order_head-tfields = /ui2/cl_json=>serialize( data = lt_char_item[] compress = abap_true pretty_name = /ui2/cl_json=>pretty_mode-camel_case ).
+    " List of values
+    wa_order_head-tvalues = /ui2/cl_json=>serialize( data = lt_char_values[] compress = abap_true pretty_name = /ui2/cl_json=>pretty_mode-camel_case ).
+    " Description of documents
+    wa_order_head-dktxt   = ls_doc_data-description.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->GET_DOC_LIST
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] AJAX_VALUE                     TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD get_doc_list.
+    DATA:
+      lv_labo       TYPE labor,
+      lt_documents  TYPE gty_doc_list,
+      ls_documents  TYPE LINE OF gty_doc_list,
+      ls_order_list TYPE ty_order_list,
+      lv_posnr      TYPE posnr,
+      lv_arch       TYPE boolean,
+      lv_railcars   TYPE char10,
+      lv_railcar    TYPE char10,
+      lv_order      TYPE char10.
+
+* Add search mode "1.1+
+    IF ajax_value IS NOT INITIAL.
+      lv_arch = abap_false.
+      SPLIT ajax_value AT ';' INTO lv_railcars lv_order.
+    ELSE.
+      lv_arch = abap_true.
+    ENDIF.
+
+
+*---------------------------------------------------------------------*
+* GET DATA
+*---------------------------------------------------------------------*
+** RG01 - Determinate Laboratory for user /// TODO
+* Auhtority check ....
+*    lv_labo = '52A'.
+    me->_get_doc_list_auth_check(
+      EXPORTING
+        i_uname = sy-uname
+      CHANGING
+        c_labor = lv_labo
+           ).
+
+* Get list of document
+    me->_get_doc_list_document(
+       EXPORTING
+         iv_labo      = lv_labo
+         iv_arch      = lv_arch
+       IMPORTING
+         et_documents = lt_documents
+           ).
+
+* Complete order list information
+    LOOP AT lt_documents INTO ls_documents
+         WHERE predocumentnumber <> '-'.
+
+
+*     Check if document is searched 1.1+
+      IF ajax_value IS NOT INITIAL.
+        " Check railcar number
+        IF lv_railcars IS NOT INITIAL.
+          lv_railcar = ls_documents-description.
+          TRANSLATE lv_railcar TO UPPER CASE.
+          TRANSLATE lv_railcars TO UPPER CASE.
+          IF NOT lv_railcar CS lv_railcars.
+            CONTINUE.
+          ENDIF.
+        ENDIF.
+        " Check order number
+        IF lv_order IS NOT INITIAL.
+          IF NOT ls_documents-predocumentnumber(10) CS lv_order.
+            CONTINUE.
+          ENDIF.
+        ENDIF.
+      ENDIF.
+
+      CLEAR: ls_order_list, lv_posnr.
+
+      ls_order_list-doknr   = ls_documents-documentnumber.
+      SHIFT ls_order_list-doknr LEFT DELETING LEADING '0'.
+      ls_order_list-doktl_d = ls_documents-documentpart.
+      ls_order_list-dktxt   = ls_documents-description.
+      ls_order_list-dokvr   = ls_documents-documentversion.
+      ls_order_list-status  = ls_documents-statusintern.
+      ls_order_list-stat_t  = ls_documents-userdefined1.
+      ls_order_list-vbeln   = ls_documents-predocumentnumber(10).
+      ls_order_list-posnr   = ls_documents-predocumentnumber+10(6).
+      ls_order_list-adatum  = ls_documents-createdate.
+
+
+      lv_posnr = ls_documents-predocumentnumber+10(6).
+      IF ls_documents-structureindicator = 'S'.
+        "Get information of sales
+        me->_get_doc_list_sd_order_detail(
+          EXPORTING
+            i_vbeln = ls_documents-predocumentnumber(10)
+            i_posnr = lv_posnr
+            i_order_list = ls_order_list
+          IMPORTING
+            e_order_list = ls_order_list
+               ).
+
+        "Get information of transfert
+      ELSE.
+        me->_get_doc_list_mm_order_detail(
+          EXPORTING
+            i_vbeln = ls_documents-predocumentnumber(10)
+            i_posnr = lv_posnr
+            i_order_list = ls_order_list
+          IMPORTING
+            e_order_list = ls_order_list
+             ).
+      ENDIF.
+
+      " Document not found in ZWOCT229 - no more confirmed
+      IF ls_order_list-wadat = '19711231'.
+        CONTINUE.
+      ENDIF.
+
+* Status color management
+      CASE ls_documents-statusintern.
+        WHEN 'AR'. "1.1+
+          ls_order_list-stat_c = 'Error'.                   "#EC NOTEXT
+        WHEN 'IA' OR 'EA' OR 'EC'.
+          ls_order_list-stat_c = 'Warning'.                 "#EC NOTEXT
+        WHEN 'W6'.
+          ls_order_list-stat_c = 'Success'.                 "#EC NOTEXT
+        WHEN OTHERS.
+          ls_order_list-stat_c = 'None'.                    "#EC NOTEXT
+      ENDCASE.
+
+      ls_order_list-filter = ls_order_list-dktxt && ls_order_list-bstkd && ls_order_list-vbeln && ls_order_list-stat_c.
+      APPEND ls_order_list TO it_order_list.
+
+    ENDLOOP.
+
+* Sorting
+    SORT it_order_list DESCENDING BY wadat.
+
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->SAVE
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] ES_RETURN                      TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD save.
+
+* Save Document
+    _save_document(
+             IMPORTING
+               es_return = es_return
+                 ).
+
+* Save Document status
+    IF es_return IS INITIAL.
+      _save_doc_status(
+               IMPORTING
+                 es_return = es_return
+                   ).
+    ENDIF.
+
+* Save Text
+    CALL METHOD _save_order_text( ).
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_CHARACT_STRUCTURE
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_CLASSNUM                    TYPE        KLASSE_D
+* | [--->] IV_LANG_ISO                    TYPE        LAISO(optional)
+* | [<---] ET_CHAR_HEADER                 TYPE        TT_BAPI_CHAR
+* | [<---] ET_CHAR_ITEM                   TYPE        TT_BAPI_CHAR
+* | [<---] EV_LANG_SAP                    TYPE        SPRAS
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_charact_structure.
+* Get structure for headers and values
+    DATA:
+      ls_return          TYPE bapireturn1,                  "#EC NEEDED
+      lt_characteristics TYPE STANDARD TABLE OF bapi_char,
+      ls_characteristics TYPE bapi_char,
+      lt_char_values     TYPE STANDARD TABLE OF bapi_char_values,
+      ls_char_values     TYPE bapi_char_values,
+      lv_cpt             TYPE numc3,
+      lv_depart          TYPE abteilung.
+    CLEAR: et_char_header, et_char_item, ev_lang_sap.
+
+* Conversion to SAP language
+    IF iv_lang_iso IS INITIAL.
+      ev_lang_sap = sy-langu.
+    ELSE.
+      CALL FUNCTION 'CONVERSION_EXIT_ISOLA_INPUT'
+        EXPORTING
+          input            = iv_lang_iso
+        IMPORTING
+          output           = ev_lang_sap
+        EXCEPTIONS
+          unknown_language = 1.
+      IF sy-subrc <> 0.
+        ev_lang_sap = sy-langu.
+      ENDIF.
+    ENDIF.
+
+    DO 2 TIMES.
+      CALL FUNCTION 'BAPI_CLASS_GET_CHARACTERISTICS'
+        EXPORTING
+          classnum        = iv_classnum
+          classtype       = gc_class_type
+          langu_iso       = iv_lang_iso
+*         LANGU_INT       = LANGU_INT
+        IMPORTING
+          return          = ls_return
+        TABLES
+          characteristics = lt_characteristics
+          char_values     = lt_char_values.
+
+      " Do one more time if no description found
+      READ TABLE lt_characteristics INTO ls_characteristics INDEX 1.
+      IF ls_characteristics-descr_char = ls_characteristics-name_char.
+        iv_lang_iso = 'EN'.
+      ELSE.
+        EXIT.
+      ENDIF.
+    ENDDO.
+
+* Split characteristics into tables
+    LOOP AT lt_characteristics INTO ls_characteristics.
+      clear ls_characteristics-template_long.
+      " Header characteristics
+      IF ls_characteristics-name_char CS '_000'.
+        LOOP AT lt_char_values INTO ls_char_values
+             WHERE name_char = ls_characteristics-name_char.
+          CASE ls_char_values-char_value.
+            WHEN 'ICON'.
+              ls_characteristics-template = ls_char_values-descr_cval.
+          ENDCASE.
+        ENDLOOP.
+        " An icon is needed, otherwise characteristic is not well created
+        IF ls_characteristics-template IS INITIAL.
+          CONTINUE.
+        ENDIF.
+        ADD 1 TO lv_cpt.
+        lv_depart = gc_doc_type_rc && '_' && lv_cpt.
+        ls_characteristics-department_view = lv_depart.
+        APPEND ls_characteristics TO et_char_header.
+
+        " Line information characteristics
+      ELSE.
+        LOOP AT lt_char_values INTO ls_char_values
+             WHERE name_char = ls_characteristics-name_char.
+           ls_characteristics-template_long = ls_characteristics-template_long && ';' && ls_char_values-char_value.
+        ENDLOOP.
+        ls_characteristics-template_long = ls_characteristics-template_long+1.
+
+        ls_characteristics-department_view = lv_depart.
+        ls_characteristics-object_table    = iv_classnum.
+        APPEND ls_characteristics TO et_char_item.
+      ENDIF.
+    ENDLOOP.
+    ev_lang_sap = sy-langu.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_DETAIL_ORDER_TEXT
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_detail_order_text.
+
+    DATA: it_stxh   TYPE STANDARD TABLE OF stxh,
+          it_text   TYPE STANDARD TABLE OF tline,
+          lv_tdname TYPE stxh-tdname,
+          lv_date   TYPE string,
+          lv_tdid   TYPE tdid,
+          lv_tdobj  TYPE tdobject,
+          wa_text   TYPE tline,
+          wa_stxh   TYPE stxh.
+
+
+* Build Key
+    CONCATENATE wa_order_head-vbeln wa_order_head-posnr
+                INTO lv_tdname.
+
+* Check document type
+    SELECT SINGLE vbeln FROM vbak
+           INTO wa_order_head-vbeln
+           WHERE vbeln = wa_order_head-vbeln.
+    IF sy-subrc = 0.
+      " Sales order
+      lv_tdid  = gc_text_sales_id.
+      lv_tdobj = gc_text_sales_obj.
+    ELSE.
+      " Purchase order
+      lv_tdid  = gc_text_trsf_id.
+      lv_tdobj = gc_text_trsf_obj.
+    ENDIF.
+
+*-------------------------------------------------------------------*
+* ITEM
+*-------------------------------------------------------------------*
+
+* Get STXH
+    wa_stxh-tdid     = lv_tdid.
+    wa_stxh-tdname   = lv_tdname.
+    wa_stxh-tdspras  = sy-langu.
+    wa_stxh-tdobject = lv_tdobj.
+
+    SELECT *
+           FROM stxh
+           INTO TABLE it_stxh
+           WHERE tdobject EQ wa_stxh-tdobject
+             AND tdname   EQ wa_stxh-tdname
+             AND tdspras  EQ wa_stxh-tdspras
+             AND tdid     EQ wa_stxh-tdid.
+*
+    LOOP AT it_stxh INTO wa_stxh.
+*
+      CLEAR it_text.
+      CALL FUNCTION 'READ_TEXT'
+        EXPORTING
+          id                      = wa_stxh-tdid
+          language                = wa_stxh-tdspras
+          name                    = wa_stxh-tdname
+          object                  = wa_stxh-tdobject
+        TABLES
+          lines                   = it_text
+        EXCEPTIONS
+          id                      = 1
+          language                = 2
+          name                    = 3
+          not_found               = 4
+          object                  = 5
+          reference_check         = 6
+          wrong_access_to_archive = 7
+          OTHERS                  = 8.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+
+      CLEAR wa_text_head-content.
+      LOOP AT it_text INTO wa_text.
+
+        CONCATENATE wa_text_head-content
+                    wa_text-tdline
+                    cl_abap_char_utilities=>cr_lf
+                    INTO wa_text_head-content.
+
+      ENDLOOP.
+
+*   Text Description
+      SELECT SINGLE tdtext
+             FROM ttxit
+             INTO wa_text_head-tdtext
+             WHERE tdspras  EQ sy-langu
+               AND tdobject EQ wa_stxh-tdobject
+               AND tdid     EQ wa_stxh-tdid.
+
+*   User Name
+      SELECT name_text
+             FROM v_usr_name
+             INTO wa_text_head-sender
+             WHERE bname EQ wa_stxh-tdfuser.
+        EXIT.
+      ENDSELECT.
+
+*   Format Date
+      CALL FUNCTION 'CONVERSION_EXIT_PDATE_OUTPUT'
+        EXPORTING
+          input  = wa_stxh-tdfdate
+        IMPORTING
+          output = lv_date.
+
+*   Timestamp
+      CONCATENATE lv_date
+                  ' / '
+                  wa_stxh-tdftime(2)
+                  ':'
+                  wa_stxh-tdftime+2(2)
+                  INTO wa_text_head-time RESPECTING BLANKS.
+
+      wa_text_head-tdname = wa_stxh-tdname.
+      wa_text_head-tdid   = wa_stxh-tdid.
+
+      APPEND wa_text_head TO it_text_head.
+      CLEAR  wa_text_head.
+
+    ENDLOOP.
+
+*
+*-------------------------------------------------------------------*
+* ITEM
+*-------------------------------------------------------------------*
+
+
+** Get STXH
+*    SELECT *
+*           FROM stxh
+*           INTO TABLE it_stxh
+*           WHERE tdobject EQ 'VBBP'
+*             AND tdname   eq lv_tdname.
+*
+*    LOOP AT it_stxh INTO wa_stxh.
+*
+*      CLEAR it_text.
+*      CALL FUNCTION 'READ_TEXT'
+*        EXPORTING
+*          id                      = wa_stxh-tdid
+*          language                = wa_stxh-tdspras
+*          name                    = wa_stxh-tdname
+*          object                  = wa_stxh-tdobject
+*        TABLES
+*          lines                   = it_text
+*        EXCEPTIONS
+*          id                      = 1
+*          language                = 2
+*          name                    = 3
+*          not_found               = 4
+*          object                  = 5
+*          reference_check         = 6
+*          wrong_access_to_archive = 7
+*          OTHERS                  = 8.
+*      IF sy-subrc <> 0.
+*        CONTINUE.
+*      ENDIF.
+*
+*      LOOP AT it_text INTO wa_text.
+*
+*        CONCATENATE wa_text_item-content
+*                    wa_text-tdline
+*                    cl_abap_char_utilities=>cr_lf
+*                    INTO wa_text_item-content.
+*
+*      ENDLOOP.
+*
+**   Text Description
+*      SELECT SINGLE tdtext
+*             FROM ttxit
+*             INTO wa_text_item-tdtext
+*             WHERE tdspras  EQ sy-langu
+*               AND tdobject EQ wa_stxh-tdobject
+*               AND tdid     EQ wa_stxh-tdid.
+*
+**   User Name
+*      SELECT name_text
+*             FROM v_usr_name
+*             INTO wa_text_item-sender
+*             WHERE bname EQ wa_stxh-tdfuser.
+*        EXIT.
+*      ENDSELECT.
+*
+**   Format Date
+*      CALL FUNCTION 'CONVERSION_EXIT_PDATE_OUTPUT'
+*        EXPORTING
+*          input  = wa_stxh-tdfdate
+*        IMPORTING
+*          output = lv_date.
+*
+**   Timestamp
+*      CONCATENATE lv_date
+*                  ' / '
+*                  wa_stxh-tdftime(2)
+*                  ':'
+*                  wa_stxh-tdftime+2(2)
+*                  INTO wa_text_item-time RESPECTING BLANKS.
+*
+*      wa_text_item-tdname = wa_stxh-tdname.
+*      wa_text_item-tdid   = wa_stxh-tdid.
+*
+*      APPEND wa_text_item TO it_text_item.
+*      CLEAR  wa_text_item.
+*
+*    ENDLOOP.
+*
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_DOC_DETAIL
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_KEY                         TYPE        BAPI_DOC_AUX
+* | [<---] ET_DOC_DATA                    TYPE        BAPI_DOC_DRAW2
+* | [<---] ET_CHAR_VALUES                 TYPE        TT_BAPI_CHARACTERISTIC_VALUES
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_doc_detail.
+    DATA: ls_return      TYPE bapiret2,                     "#EC NEEDED
+          lv_docnumber   TYPE doknr,
+          lt_char_values TYPE tt_bapi_characteristic_values,
+          ls_char_values TYPE bapi_characteristic_values,
+          lt_doc_desc    TYPE STANDARD TABLE OF bapi_doc_drat,
+          ls_doc_desc    TYPE bapi_doc_drat,
+          lv_spras       TYPE spras.
+    CLEAR: et_doc_data, et_char_values.
+
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+      EXPORTING
+        input  = iv_key-docnumber
+      IMPORTING
+        output = lv_docnumber.
+
+    CALL FUNCTION 'BAPI_DOCUMENT_GETDETAIL2'
+      EXPORTING
+        documenttype         = iv_key-doctype
+        documentnumber       = lv_docnumber
+        documentpart         = iv_key-docpart
+        documentversion      = iv_key-docversion
+*       GETOBJECTLINKS       = ' '
+*       GETCOMPONENTS        = ' '
+*       GETSTATUSLOG         = ' '
+*       GETLONGTEXTS         = ' '
+*       GETACTIVEFILES       = 'X'
+        getdocdescriptions   = 'X'
+*       GETDOCFILES          = 'X'
+        getclassification    = 'X'
+*       GETSTRUCTURE         = ' '
+*       GETWHEREUSED         = ' '
+*       HOSTNAME             = ' '
+*       INHERITED            = 'X'
+*       PF_BAPI_CALL         = PF_BAPI_CALL
+      IMPORTING
+        documentdata         = et_doc_data
+        return               = ls_return
+      TABLES
+*       OBJECTLINKS          = OBJECTLINKS
+        documentdescriptions = lt_doc_desc
+*       LONGTEXTS            = LONGTEXTS
+*       STATUSLOG            = STATUSLOG
+*       DOCUMENTFILES        = DOCUMENTFILES
+*       COMPONENTS           = COMPONENTS
+        characteristicvalues = lt_char_values
+*       CLASSALLOCATIONS     = CLASSALLOCATIONS
+*       DOCUMENTSTRUCTURE    = DOCUMENTSTRUCTURE
+*       WHEREUSEDLIST        = WHEREUSEDLIST
+      .
+
+* Get description information
+    IF iv_key-lang_iso IS INITIAL.
+      lv_spras = sy-langu.
+    ELSE.
+      CALL FUNCTION 'CONVERSION_EXIT_ISOLA_INPUT'
+        EXPORTING
+          input            = iv_key-lang_iso
+        IMPORTING
+          output           = lv_spras
+        EXCEPTIONS
+          unknown_language = 1.
+      IF sy-subrc <> 0.
+        lv_spras = sy-langu.
+      ENDIF.
+    ENDIF.
+    READ TABLE lt_doc_desc INTO ls_doc_desc
+         WITH KEY language = lv_spras.
+    IF sy-subrc <> 0.
+      lv_spras = 'E'.
+      READ TABLE lt_doc_desc INTO ls_doc_desc
+          WITH KEY language = lv_spras.
+    ENDIF.
+    et_doc_data-description = ls_doc_desc-description.
+
+* Do not send header even if there are values
+    LOOP AT lt_char_values
+         INTO ls_char_values.
+      IF NOT ls_char_values-charname CS '_000'.
+        APPEND ls_char_values TO et_char_values.
+      ENDIF.
+    ENDLOOP.
+
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_DOC_LIST_AUTH_CHECK
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_UNAME                        TYPE        UNAME(optional)
+* | [<-->] C_LABOR                        TYPE        LABOR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_doc_list_auth_check.
+    DATA: lv_uname    TYPE usr02-bname,
+          lv_object   TYPE ust12-objct,
+          lt_usvalues TYPE STANDARD TABLE OF usvalues,
+          ls_usvalues TYPE usvalues.
+
+    IF i_uname IS INITIAL.
+      lv_uname = sy-uname.
+    ELSE.
+      lv_uname = i_uname.
+    ENDIF.
+
+* Get authorization value for the user
+    lv_object = 'C_DRAW_BGR'. " Authorization must be Z52A in the profile
+    CALL FUNCTION 'EFG_USER_AUTH_FOR_OBJ_GET'
+      EXPORTING
+*       X_CLIENT       = SY-MANDT
+        x_uname        = lv_uname
+        x_object       = lv_object
+      TABLES
+        yt_usvalues    = lt_usvalues[]
+      EXCEPTIONS
+        user_not_found = 1
+        not_authorized = 2
+        internal_error = 3.
+
+* Get authorization value
+    IF sy-subrc = 0.
+      CLEAR c_labor.
+      LOOP AT lt_usvalues INTO ls_usvalues.
+        IF ls_usvalues-von = '*'.
+          c_labor = '52A'. " To parameter in TVARVC or other TODO
+          EXIT.
+        ELSEIF ls_usvalues-von CS 'Z'.
+          c_labor = ls_usvalues-von+1(3).
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_DOC_LIST_DOCUMENT
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IV_LABO                        TYPE        LABOR
+* | [--->] IV_ARCH                        TYPE        BOOLEAN
+* | [<---] ET_DOCUMENTS                   TYPE        GTY_DOC_LIST
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_doc_list_document.
+
+    DATA: lv_tabix             TYPE i,
+          lv_vers(2)           TYPE n, "Do not change the type
+          lv_dokvr             TYPE dokvr,
+          lt_objectlinks       TYPE STANDARD TABLE OF bapi_doc_drad,
+          ls_objectlinks       TYPE bapi_doc_drad,
+          lv_statusdescription TYPE bapi_doc_tdws-description.
+    FIELD-SYMBOLS: <fs_doc> TYPE bapi_doc_draw.
+
+* Get documents for a laboratory
+    CALL FUNCTION 'BAPI_DOCUMENT_GETLIST'
+      EXPORTING
+        documenttype = gc_doc_type_rc
+*       DOCUMENTPART = ' '
+*       DOCUMENTVERSION = ' '
+*       DESCRIPTION  = ' '
+*       LANGUAGE     = SY-LANGU
+*       LANGUAGEISO  = ' '
+*       USERNAME     = ' '
+*       AUTHORITYGROUP  = ' '
+*       ECNUMBER     = ' '
+        laboratory   = iv_labo
+*       deleteindicator = ' ' " Not deleted "1.1 for search document
+*       DATACARRIER  = ' '
+*       CADINDICATOR = '*'
+*       WSAPPLICATION   = ' '
+*       STATUSEXTERN = ' '
+*       STATUSINTERN = ' '
+*       MAXROWS      = 0
+* IMPORTING
+*       RETURN       = RETURN
+*       FOUNDROWS    = FOUNDROWS
+      TABLES
+*       DOCNUMBERSELECTION       = DOCNUMBERSELECTION
+        documentlist = et_documents.
+
+* Get the last version of the document
+    SORT et_documents BY documentnumber documentversion.
+    LOOP AT et_documents ASSIGNING <fs_doc>.
+      lv_tabix = sy-tabix.
+      lv_vers  = <fs_doc>-documentversion + 1.
+      lv_dokvr = lv_vers.
+      READ TABLE et_documents TRANSPORTING NO FIELDS
+           WITH KEY documentnumber  = <fs_doc>-documentnumber
+                    documentversion = lv_dokvr.
+      IF sy-subrc = 0.
+        DELETE et_documents INDEX lv_tabix.
+      ENDIF.
+    ENDLOOP.
+
+* Check if order is attached.
+    LOOP AT et_documents ASSIGNING <fs_doc>.
+      lv_tabix = sy-tabix.
+*      " No archived document
+      IF iv_arch = abap_true. "Allowed for search mode "1.1+
+        IF <fs_doc>-statusintern = 'AR'.
+          DELETE et_documents INDEX lv_tabix.
+          CONTINUE.
+        ENDIF.
+      ENDIF.
+
+* Get document links to see in the header
+      CALL FUNCTION 'BAPI_DOCUMENT_GETDETAIL2'
+        EXPORTING
+          documenttype    = <fs_doc>-documenttype
+          documentnumber  = <fs_doc>-documentnumber
+          documentpart    = <fs_doc>-documentpart
+          documentversion = <fs_doc>-documentversion
+          getobjectlinks  = 'X'
+        TABLES
+          objectlinks     = lt_objectlinks.
+
+      LOOP AT lt_objectlinks INTO ls_objectlinks
+           WHERE objecttype = 'VBAP'
+              OR objecttype = 'EKPO'.
+        <fs_doc>-predocumentnumber = ls_objectlinks-objectkey.
+        IF ls_objectlinks-objecttype = 'VBAP'.
+          <fs_doc>-structureindicator = 'S'. " Sales
+        ELSE.
+          <fs_doc>-structureindicator = 'P'. " Purchase
+        ENDIF.
+      ENDLOOP.
+      IF sy-subrc <> 0.
+*        CLEAR <fs_doc>-structureindicator.
+*        <fs_doc>-predocumentnumber = '-'.
+        DELETE et_documents INDEX lv_tabix.
+        CONTINUE.
+      ENDIF.
+
+* Get document status
+      CLEAR lv_statusdescription.
+      CALL FUNCTION 'BAPI_DOCUMENT_GETSTATUS'
+        EXPORTING
+          documenttype      = <fs_doc>-documenttype
+          documentnumber    = <fs_doc>-documentnumber
+          documentpart      = <fs_doc>-documentpart
+          documentversion   = <fs_doc>-documentversion
+        IMPORTING
+*         STATUSEXTERN      = STATUSEXTERN
+*         STATUSINTERN      = STATUSINTERN
+          statusdescription = lv_statusdescription
+*         RETURN            = RETURN
+        .
+      <fs_doc>-userdefined1 = lv_statusdescription.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_DOC_LIST_MM_ORDER_DETAIL
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_VBELN                        TYPE        VBELN
+* | [--->] I_POSNR                        TYPE        POSNR
+* | [--->] I_ORDER_LIST                   TYPE        TY_ORDER_LIST
+* | [<---] E_ORDER_LIST                   TYPE        TY_ORDER_LIST
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_doc_list_mm_order_detail.
+    TYPES: BEGIN OF ty_229,
+             vbeln    TYPE vbeln_va,
+             posnr    TYPE posnr,
+             wadat    TYPE wadat,
+             vbeln_vl TYPE vbeln_vl,
+             posnr_vl TYPE posnr_vl,
+           END OF ty_229.
+    DATA: it_229 TYPE STANDARD TABLE OF ty_229,
+          wa_229 TYPE ty_229.
+
+*---------------------------------------------------------------------*
+* GET DATA
+*---------------------------------------------------------------------*
+    e_order_list = i_order_list.
+    CLEAR: e_order_list-bstkd, e_order_list-wadat,
+           e_order_list-vbeln_vl, e_order_list-posnr_vl.
+
+* Get reference data
+    SELECT SINGLE ihrez FROM ekko
+           INTO e_order_list-bstkd
+           WHERE ebeln = i_vbeln.
+
+* Get good issue information
+    SELECT vbeln posnr wadat vbeln_vl posnr_vl
+           FROM zwoct229
+           INTO TABLE it_229
+           WHERE vbeln EQ i_vbeln
+             AND posnr EQ i_posnr.
+    IF sy-subrc <> 0.
+      e_order_list-wadat = '19711231'.
+    ENDIF.
+    CLEAR wa_229.
+    LOOP AT it_229 INTO wa_229
+         WHERE vbeln EQ i_vbeln
+           AND posnr EQ i_posnr.
+      e_order_list-wadat    = wa_229-wadat.
+      e_order_list-vbeln_vl = wa_229-vbeln_vl.
+      e_order_list-posnr_vl = wa_229-posnr_vl.
+    ENDLOOP.
+
+*    e_order_list-bstkd   = wa_vbkd-bstkd.
+*    e_order_list-lfgsk   = wa_vbuk-lfgsk.
+*    e_order_list-erdat   = wa_vbak-erdat.
+*    e_order_list-name1   = wa_kna1-name1.
+*    e_order_list-kunnr   = wa_kna1-kunnr.
+
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_DOC_LIST_SD_ORDER_DETAIL
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] I_VBELN                        TYPE        VBELN
+* | [--->] I_POSNR                        TYPE        POSNR
+* | [--->] I_ORDER_LIST                   TYPE        TY_ORDER_LIST
+* | [<---] E_ORDER_LIST                   TYPE        TY_ORDER_LIST
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_doc_list_sd_order_detail.
+    TYPES: BEGIN OF ty_vbkd,
+             vbeln TYPE vbkd-vbeln,
+             bstkd TYPE vbkd-bstkd,
+             inco1 TYPE vbkd-inco1,
+             inco2 TYPE vbkd-inco2,
+           END OF ty_vbkd.
+
+    TYPES: BEGIN OF ty_229,
+             vbeln    TYPE vbeln_va,
+             posnr    TYPE posnr,
+             wadat    TYPE wadat,
+             vbeln_vl TYPE vbeln_vl,
+             posnr_vl TYPE posnr_vl,
+           END OF ty_229.
+
+    DATA:
+      wa_vbkd TYPE ty_vbkd,
+      wa_229  TYPE ty_229,
+      it_229  TYPE STANDARD TABLE OF ty_229.
+
+
+*---------------------------------------------------------------------*
+* GET DATA
+*---------------------------------------------------------------------*
+    e_order_list = i_order_list.
+    CLEAR: e_order_list-bstkd, e_order_list-wadat,
+           e_order_list-vbeln_vl, e_order_list-posnr_vl.
+
+* Get VBKD
+    SELECT SINGLE vbeln bstkd inco1 inco2
+           FROM vbkd
+           INTO wa_vbkd
+           WHERE vbeln EQ i_vbeln
+             AND posnr EQ i_posnr.
+
+* Get order/delivery information // Exclude RE(turn) for the moment
+    SELECT vbeln posnr wadat vbeln_vl posnr_vl
+           FROM zwoct229
+           INTO TABLE it_229
+           WHERE vbeln EQ i_vbeln
+             AND posnr EQ i_posnr.
+*             and auart <> 'RE'.  "20200707-
+    IF sy-subrc <> 0.
+      e_order_list-wadat = '19711231'.
+    ENDIF.
+    CLEAR wa_229.
+    LOOP AT it_229 INTO wa_229
+         WHERE vbeln EQ i_vbeln
+           AND posnr EQ i_posnr.
+      e_order_list-wadat    = wa_229-wadat.
+      e_order_list-vbeln_vl = wa_229-vbeln_vl.
+      e_order_list-posnr_vl = wa_229-posnr_vl.
+    ENDLOOP.
+
+    e_order_list-bstkd   = wa_vbkd-bstkd.
+*    e_order_list-lfgsk   = wa_vbuk-lfgsk.
+*    e_order_list-erdat   = wa_vbak-erdat.
+*    e_order_list-name1   = wa_kna1-name1.
+*    e_order_list-kunnr   = wa_kna1-kunnr.
+
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_GET_TAB_SUM_COLOR
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IT_CHAR_ITEM                   TYPE        TT_BAPI_CHAR
+* | [--->] IT_CHAR_VALUES                 TYPE        TT_BAPI_CHARACTERISTIC_VALUES
+* | [<-->] CT_CHAR_HEADER                 TYPE        TT_BAPI_CHAR
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _get_tab_sum_color.
+* Get structure for headers and values
+    DATA:
+      ls_char_i   TYPE bapi_char,
+*      ls_char_values     TYPE bapi_char_values,
+      lv_empty    TYPE i,
+      lv_len      TYPE i,
+      lv_char(16) TYPE c.
+    FIELD-SYMBOLS: <fsl_head> TYPE bapi_char.
+
+* Method to get sum of item filled and color of tab
+    LOOP AT ct_char_header ASSIGNING <fsl_head>.
+      CLEAR lv_empty.
+      lv_char = <fsl_head>-name_char(15).
+      LOOP AT it_char_item INTO ls_char_i
+           WHERE name_char CS lv_char.
+        lv_len = strlen( ls_char_i-name_char ). "1.01+
+        IF lv_len > 18. CONTINUE. ENDIF.      "1.01+
+        READ TABLE it_char_values TRANSPORTING NO FIELDS
+             WITH KEY charname = ls_char_i-name_char.
+        IF sy-subrc <> 0.
+          ADD 1 TO lv_empty.
+        ENDIF.
+      ENDLOOP.
+      <fsl_head>-number_digits = lv_empty.
+      IF lv_empty IS INITIAL.
+        <fsl_head>-number_decimals = 0.  "Green
+      ELSE.
+        <fsl_head>-number_decimals = 1.  "Normal
+      ENDIF.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_SAVE_DOCUMENT
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] ES_RETURN                      TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _save_document.
+    FIELD-SYMBOLS: <fs_char> TYPE bapi_characteristic_values.
+    DATA:
+      lt_char_values      TYPE tt_bapi_characteristic_values,
+      ls_char_values      TYPE LINE OF tt_bapi_characteristic_values,
+      lt_char_values_save TYPE tt_bapi_characteristic_values,
+      lt_char_header      TYPE tt_bapi_char,
+      lt_char_item        TYPE tt_bapi_char,
+      ls_documentdata     TYPE bapi_doc_draw2,
+      ls_documentdatax    TYPE bapi_doc_drawx2,
+      ls_return           TYPE bapiret2,
+      ls_classallocations TYPE bapi_class_allocation,
+      lt_classallocations TYPE STANDARD TABLE OF bapi_class_allocation,
+      lv_day(2)           TYPE n,
+      lv_month(2)         TYPE n,
+      lv_dktxt            TYPE dktxt, " Railcar number
+      lv_year(4)          TYPE n,
+      lv_user1            TYPE uname,
+      lv_user2            TYPE uname,
+      lv_bapireturn       TYPE bapireturn.
+    CLEAR es_return.
+
+    " List of values
+    /ui2/cl_json=>deserialize( EXPORTING json = wa_order_head-tvalues      pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = lt_char_values ).
+    /ui2/cl_json=>deserialize( EXPORTING json = wa_order_head-tvalues_save pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = lt_char_values_save ).
+    /ui2/cl_json=>deserialize( EXPORTING json = wa_order_head-tabs         pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = lt_char_header ).
+    /ui2/cl_json=>deserialize( EXPORTING json = wa_order_head-tfields      pretty_name = /ui2/cl_json=>pretty_mode-camel_case CHANGING data = lt_char_item ).
+
+    " Get the first value to get information to classallocation
+    LOOP AT lt_char_values ASSIGNING <fs_char>
+         WHERE classname <> space.
+      ls_classallocations-classtype = gc_class_type.
+      ls_classallocations-classname = <fs_char>-classname.
+      ls_classallocations-status    = '1'.
+
+      " Management of date value (convert to sap internal)
+      IF <fs_char>-charvalue_long = 'DATE'.
+        SPLIT <fs_char>-charvalue AT '/' INTO lv_month lv_day lv_year.
+        lv_month = lv_month + 0.
+        lv_day   = lv_day   + 0.
+        <fs_char>-charvalue = lv_year && lv_month && lv_day.
+      ENDIF.
+
+      " Railcar number
+      IF <fs_char>-charvalue_long = 'RCNUM'.
+        lv_dktxt = <fs_char>-charvalue.
+      ENDIF.
+
+      IF lt_classallocations IS INITIAL.
+        APPEND ls_classallocations TO lt_classallocations.
+      ENDIF.
+    ENDLOOP.
+
+    " Get tab sum and color // to determinate status
+    " To do before adding deleted values
+    me->_get_tab_sum_color(
+      EXPORTING
+        it_char_item   = lt_char_item
+        it_char_values = lt_char_values
+      CHANGING
+        ct_char_header = lt_char_header
+           ).
+
+    " Save of users for log the change status
+    CLEAR ls_char_values.
+    READ TABLE lt_char_values INTO ls_char_values
+      WITH KEY charname = 'ZLE_Z52_52A_CH_003'.
+    lv_user1 = ls_char_values-charvalue.
+    CLEAR ls_char_values.
+    READ TABLE lt_char_values INTO ls_char_values
+      WITH KEY charname = 'ZLE_Z52_52A_AS_001'.
+    lv_user2 = ls_char_values-charvalue.
+
+    " Delete values
+    LOOP AT lt_char_values_save ASSIGNING <fs_char>
+         WHERE classname <> space.
+      " Check if entry still exist in table changed, if no, considere as deleted
+      READ TABLE lt_char_values TRANSPORTING NO FIELDS
+           WITH KEY charname = <fs_char>-charname.
+      IF sy-subrc <> 0.
+*        CLEAR <fs_char>-charvalue. "Need to keep old value to delete
+        <fs_char>-deletevalue = 'X'.
+        APPEND <fs_char> TO lt_char_values.
+      ENDIF.
+    ENDLOOP.
+
+    " Determinate the status of document
+    me->_save_doc_det_status(
+      EXPORTING
+         it_header    = lt_char_header
+         iv_user1     = lv_user1
+         iv_user2     = lv_user2
+         iv_stat_glob = wa_order_head-stat_glob
+         iv_stat_arch = wa_order_head-stat_arch
+      IMPORTING
+         ev_user      = wa_order_head-uname
+      CHANGING
+         cv_dokst  = wa_order_head-dokst
+           ).
+
+
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+      EXPORTING
+        input  = wa_order_head-doknr
+      IMPORTING
+        output = ls_documentdata-documentnumber.
+    ls_documentdata-documenttype    = gc_doc_type_rc.
+    ls_documentdata-documentpart    = wa_order_head-doktl_d.
+    ls_documentdata-documentversion = wa_order_head-dokvr.
+    ls_documentdata-description     = lv_dktxt.
+    ls_documentdatax-description    = 'X'.
+    ls_documentdata-vrldat          = sy-datum.
+    ls_documentdatax-vrldat         = 'X'.
+    ls_documentdata-authoritygroup  = 'Z52A'.
+    ls_documentdatax-authoritygroup = 'X'.
+
+    CALL FUNCTION 'BAPI_DOCUMENT_CHANGE2'
+      EXPORTING
+        documenttype         = ls_documentdata-documenttype
+        documentnumber       = ls_documentdata-documentnumber
+        documentpart         = ls_documentdata-documentpart
+        documentversion      = ls_documentdata-documentversion
+        documentdata         = ls_documentdata
+        documentdatax        = ls_documentdatax
+*       HOSTNAME             = HOSTNAME
+*       DOCBOMCHANGENUMBER   = DOCBOMCHANGENUMBER
+*       DOCBOMVALIDFROM      = DOCBOMVALIDFROM
+*       DOCBOMREVISIONLEVEL  = DOCBOMREVISIONLEVEL
+*       SENDCOMPLETEBOM      = ' '
+*       PF_FTP_DEST          = ' '
+*       PF_HTTP_DEST         = ' '
+*       CAD_MODE             = ' '
+*       ACCEPT_EMPTY_BOM     = ' '
+      IMPORTING
+        return               = ls_return
+      TABLES
+        characteristicvalues = lt_char_values
+        classallocations     = lt_classallocations
+*       DOCUMENTDESCRIPTIONS = DOCUMENTDESCRIPTIONS
+*       OBJECTLINKS          = OBJECTLINKS
+*       DOCUMENTSTRUCTURE    = DOCUMENTSTRUCTURE
+*       DOCUMENTFILES        = DOCUMENTFILES
+*       LONGTEXTS            = LONGTEXTS
+*       COMPONENTS           = COMPONENTS
+      .
+
+
+* Commit if success
+    IF ls_return IS INITIAL.
+      CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+        EXPORTING
+          wait = 'X'
+*      IMPORTING
+*         RETURN        = RETURN
+        .
+
+* Message if error
+    ELSE.
+      CALL FUNCTION 'BALW_BAPIRETURN_GET'
+        EXPORTING
+          type       = ls_return-type
+          cl         = ls_return-id
+          number     = ls_return-number
+          par1       = ls_return-message_v1
+          par2       = ls_return-message_v2
+          par3       = ls_return-message_v3
+          par4       = ls_return-message_v4
+*         LOG_NO     = ' '
+*         LOG_MSG_NO = ' '
+        IMPORTING
+          bapireturn = lv_bapireturn.
+*        EXCEPTIONS
+*          only_2_char_for_message_id = 1.
+      es_return = lv_bapireturn.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_SAVE_DOC_DET_STATUS
+* +-------------------------------------------------------------------------------------------------+
+* | [--->] IT_HEADER                      TYPE        TT_BAPI_CHAR
+* | [--->] IV_STAT_GLOB                   TYPE        BOOLEAN
+* | [--->] IV_STAT_ARCH                   TYPE        BOOLEAN
+* | [--->] IV_USER1                       TYPE        UNAME
+* | [--->] IV_USER2                       TYPE        UNAME
+* | [<---] EV_USER                        TYPE        UNAME
+* | [<-->] CV_DOKST                       TYPE        DOKST
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _save_doc_det_status.
+    DATA:
+      ls_char_header TYPE bapi_char,
+      lv_stat1       TYPE boolean,
+      lv_stat2       TYPE boolean,
+      lv_user        type uname.
+
+*** Status order
+* Z52 CR  Created
+* Z52 IA  In work
+* Z52 EC  1º Approval
+* Z52 EA  2º Approval
+* Z52 W6  Completed
+* Z52 AR  Archived
+***
+    lv_user = sy-uname.
+
+    " Read first validation / Approved to ship
+    READ TABLE it_header INTO ls_char_header
+         WITH KEY name_char = 'ZLE_Z52_52A_CH_000'.
+    IF ls_char_header-number_digits = 0.
+      lv_stat1 = abap_true.
+    ENDIF.
+
+    " Read second validation / Approved to ship
+    READ TABLE it_header INTO ls_char_header
+         WITH KEY name_char = 'ZLE_Z52_52A_AS_000'.
+    IF ls_char_header-number_digits = 0.
+      lv_stat2 = abap_true.
+    ENDIF.
+
+    " Archived status
+    IF iv_stat_arch = abap_true.
+      IF cv_dokst = 'W6'.
+        cv_dokst = 'AR'.
+        lv_user = sy-uname.
+      ENDIF.
+
+      " Global status
+    ELSEIF iv_stat_glob = abap_true.
+      cv_dokst = 'W6'.
+      lv_user = sy-uname.
+
+      " Second validation
+    ELSEIF lv_stat2 = abap_true.
+      IF cv_dokst = 'EC'.
+        lv_user  = iv_user2.
+      ELSE.
+        lv_user  = sy-uname.
+      ENDIF.
+      cv_dokst = 'EA'.
+
+      " First validation
+    ELSEIF lv_stat1 = abap_true.
+      IF cv_dokst = 'IA'. "Previous status
+        lv_user  = iv_user1.
+      ELSE.
+        lv_user  = sy-uname.
+      ENDIF.
+      cv_dokst = 'EC'.
+
+      " We are in work
+    ELSE.
+      cv_dokst = 'IA'.
+      lv_user  = sy-uname.
+    ENDIF.
+
+    " Export parameters
+    ev_user = lv_user.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_SAVE_DOC_STATUS
+* +-------------------------------------------------------------------------------------------------+
+* | [<---] ES_RETURN                      TYPE        STRING
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _save_doc_status.
+    DATA:
+      ls_documentdata TYPE bapi_doc_draw2,
+      lv_protf        TYPE protf,
+      ls_return       TYPE bapiret2,
+      lv_bapireturn   TYPE bapireturn,
+      ls_addr_usr     TYPE v_addr_usr.
+    CLEAR es_return.
+
+* Get first name of uname
+*DATA BNAME      TYPE USR03-BNAME.
+*DATA MANDT      TYPE USR03-MANDT.
+*DATA NO_DISPLAY TYPE C.
+*DATA OKCODE     TYPE C.
+*DATA ADDR_USR   TYPE V_ADDR_USR.
+*DATA USER_USR03 TYPE USR03.
+
+    CALL FUNCTION 'SUSR_SHOW_USER_DETAILS'
+      EXPORTING
+        bname      = wa_order_head-uname
+*       MANDT      = SY-MANDT
+        no_display = 'X'
+      IMPORTING
+*       OKCODE     = OKCODE
+        addr_usr   = ls_addr_usr
+*    CHANGING
+*       USER_USR03 = USER_USR03
+      .
+    IF ls_addr_usr-name_first IS INITIAL.
+      ls_addr_usr-name_first = wa_order_head-uname.
+    ENDIF.
+
+    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+      EXPORTING
+        input  = wa_order_head-doknr
+      IMPORTING
+        output = ls_documentdata-documentnumber.
+    ls_documentdata-documenttype    = gc_doc_type_rc.
+    ls_documentdata-documentpart    = wa_order_head-doktl_d.
+    ls_documentdata-documentversion = wa_order_head-dokvr.
+    CONCATENATE 'Changed by '(003) ls_addr_usr-name_first INTO lv_protf SEPARATED BY space.
+
+    CALL FUNCTION 'BAPI_DOCUMENT_SETSTATUS'
+      EXPORTING
+        documenttype    = ls_documentdata-documenttype
+        documentnumber  = ls_documentdata-documentnumber
+        documentpart    = ls_documentdata-documentpart
+        documentversion = ls_documentdata-documentversion
+        statusextern    = wa_order_head-dokst
+        statusintern    = wa_order_head-dokst
+        statuslog       = lv_protf
+      IMPORTING
+        return          = ls_return.
+
+* Commit if success
+    IF ls_return IS INITIAL.
+      CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'.
+
+* Message if error
+    ELSE.
+      CALL FUNCTION 'BALW_BAPIRETURN_GET'
+        EXPORTING
+          type       = ls_return-type
+          cl         = ls_return-id
+          number     = ls_return-number
+          par1       = ls_return-message_v1
+          par2       = ls_return-message_v2
+          par3       = ls_return-message_v3
+          par4       = ls_return-message_v4
+*         LOG_NO     = ' '
+*         LOG_MSG_NO = ' '
+        IMPORTING
+          bapireturn = lv_bapireturn.
+*        EXCEPTIONS
+*          only_2_char_for_message_id = 1.
+      es_return = lv_bapireturn.
+    ENDIF.
+
+  ENDMETHOD.
+
+
+* <SIGNATURE>---------------------------------------------------------------------------------------+
+* | Instance Private Method ZCL_NEPT_SD_RAILCAR_FOLLOWUP->_SAVE_ORDER_TEXT
+* +-------------------------------------------------------------------------------------------------+
+* +--------------------------------------------------------------------------------------</SIGNATURE>
+  METHOD _save_order_text.
+
+    DATA: it_text  TYPE STANDARD TABLE OF string,
+          it_tline TYPE STANDARD TABLE OF tline,
+          wa_tline LIKE LINE OF it_tline,
+          wa_text  LIKE LINE OF it_text,
+          lv_thead TYPE thead,
+          lv_vbeln TYPE vbeln,
+          lv_tdid  TYPE tdid,
+          lv_tdobj TYPE tdobject.
+
+* Check document type
+    SELECT SINGLE vbeln FROM vbak
+           INTO lv_vbeln
+           WHERE vbeln = wa_order_head-vbeln.
+    IF sy-subrc = 0.
+      " Sales order
+      lv_tdid  = gc_text_sales_id.
+      lv_tdobj = gc_text_sales_obj.
+    ELSE.
+      " Purchase order
+      lv_tdid  = gc_text_trsf_id.
+      lv_tdobj = gc_text_trsf_obj.
+    ENDIF.
+
+*---------------------------------------------------------------------*
+* HEADER
+*---------------------------------------------------------------------*
+    LOOP AT it_text_head INTO wa_text_head WHERE changed IS NOT INITIAL.
+
+      CLEAR it_text.
+      CLEAR it_tline.
+
+*   Text Header
+      lv_thead-tdid     = lv_tdid.
+      lv_thead-tdobject = lv_tdobj.
+      lv_thead-tdname   = wa_text_head-tdname.
+      lv_thead-tdspras  = sy-langu.
+
+      " Read previous text
+      CALL FUNCTION 'READ_TEXT'
+        EXPORTING
+          id                      = lv_thead-tdid
+          language                = lv_thead-tdspras
+          name                    = lv_thead-tdname
+          object                  = lv_thead-tdobject
+*         ARCHIVE_HANDLE          = 0
+*         LOCAL_CAT               = ' '
+*       IMPORTING
+*         HEADER                  = HEADER
+*         OLD_LINE_COUNTER        = OLD_LINE_COUNTER
+        TABLES
+          lines                   = it_tline
+        EXCEPTIONS
+          id                      = 1
+          language                = 2
+          name                    = 3
+          not_found               = 4
+          object                  = 5
+          reference_check         = 6
+          wrong_access_to_archive = 7.
+      IF sy-subrc <> 0.
+        sy-subrc = 0.
+      ENDIF.
+
+
+      CLEAR wa_text.
+      APPEND wa_text TO it_tline.
+      wa_tline-tdformat = '*'.
+      GET TIME.
+      wa_tline-tdline   = sy-uname && '____' && sy-datum+4(2) && '/' && sy-datum+6(2) "#EC NOTEXT
+                        && '/' && sy-datum(4) && '_' && sy-uzeit(2) && ':' &&
+                        sy-datum+2(2) && ':' && sy-datum+4(2).
+      APPEND wa_tline TO it_tline.
+
+      SPLIT wa_text_head-content AT cl_abap_char_utilities=>cr_lf INTO TABLE it_text.
+
+      LOOP AT it_text INTO wa_text.
+        wa_tline-tdformat = '*'.
+        wa_tline-tdline   = wa_text.
+        APPEND wa_tline TO it_tline.
+        CLEAR  wa_tline.
+      ENDLOOP.
+
+*   Update Order Key
+      REPLACE '$0' IN wa_text_head-tdname WITH wa_order_head-vbeln.
+
+
+
+*   Save Text
+      CALL FUNCTION 'SAVE_TEXT'
+        EXPORTING
+          header          = lv_thead
+          savemode_direct = 'X'
+        TABLES
+          lines           = it_tline
+        EXCEPTIONS
+          id              = 1
+          language        = 2
+          name            = 3
+          object          = 4
+          OTHERS          = 5.
+      IF sy-subrc <> 0.
+        CONTINUE.
+      ENDIF.
+*      ENDIF.
+
+    ENDLOOP.
+    CLEAR it_text_head.
+
+
+*---------------------------------------------------------------------*
+* ITEM
+*---------------------------------------------------------------------*
+*    LOOP AT it_text_item INTO wa_text_item WHERE changed IS NOT INITIAL.
+*
+*      CLEAR it_text.
+*      CLEAR it_tline.
+*
+*      SPLIT wa_text_item-content AT cl_abap_char_utilities=>cr_lf INTO TABLE it_text.
+*
+*      LOOP AT it_text INTO wa_text.
+*        wa_tline-tdformat = '*'.
+*        wa_tline-tdline   = wa_text.
+*        APPEND wa_tline TO it_tline.
+*        CLEAR  wa_tline.
+*      ENDLOOP.
+*
+**   Update Order Key
+*      REPLACE '$0' IN wa_text_item-tdname WITH wa_order_head-vbeln.
+*
+**   Text Header
+*      lv_thead-tdid     = wa_text_item-tdid.
+*      lv_thead-tdobject = 'VBBP'.
+*      lv_thead-tdname   = wa_text_item-tdname.
+*      lv_thead-tdspras  = sy-langu.
+*
+**   Save Text
+*      CALL FUNCTION 'SAVE_TEXT'
+*        EXPORTING
+*          header          = lv_thead
+*          savemode_direct = 'X'
+*        TABLES
+*          lines           = it_tline
+*        EXCEPTIONS
+*          id              = 1
+*          language        = 2
+*          name            = 3
+*          object          = 4
+*          OTHERS          = 5.
+*      IF sy-subrc <> 0.
+*        CONTINUE.
+*      ENDIF.
+*    ENDLOOP.
+
+* Commit
+    COMMIT WORK AND WAIT.
+
+
+  ENDMETHOD.
+ENDCLASS.
