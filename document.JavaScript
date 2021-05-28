@@ -19,3 +19,7 @@ InputQuantityadd.onfocusin = function(Call) {
 	document.activeElement.blur()
 	document.activeElement.id
 	document.activeElement.select()
+	
+	
+	getobject 
+	var a = sap.ui.getCore().byId('B1')
