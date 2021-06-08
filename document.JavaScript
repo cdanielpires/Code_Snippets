@@ -23,3 +23,14 @@ InputQuantityadd.onfocusin = function(Call) {
 	
 	getobject 
 	var a = sap.ui.getCore().byId('B1')
+
+sap.ui.getCore().byId(document.activeElement.id.replace('-inner', '')).fireLiveChange();
+
+
+            setTimeout(function() {
+                document.activeElement.value = data.barcode;
+                modeloPage.refresh();
+                sap.ui.getCore().byId(document.activeElement.id.replace('-inner', '')).fireLiveChange();
+                document.activeElement.blur();
+                
+            }, 100);
