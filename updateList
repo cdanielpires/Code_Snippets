@@ -1,0 +1,17 @@
+var Elements = document.querySelectorAll('[data-sap-ui^=Select]');
+var Items = Select.getItems();
+
+Elements.forEach(function(Element) {
+    if (Element.getAttribute('tabindex')) {
+        let obj = sap.ui.getCore().getElementById(Element.id);
+        obj.destroyItems();
+        
+        Items.forEach(function(item) {
+            obj.addItem(new sap.ui.core.Item({
+                key: item.getKey(),
+                text: item.getText()
+            }));
+
+        });
+    }
+})
